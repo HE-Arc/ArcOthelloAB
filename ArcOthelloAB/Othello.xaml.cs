@@ -32,5 +32,10 @@ namespace ArcOthelloAB
             parent.Show();
             this.Close();
         }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            parent.Show();
+        }
     }
 }
