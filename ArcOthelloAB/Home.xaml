@@ -1,0 +1,26 @@
+﻿<Window x:Class="ArcOthelloAB.Home"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ArcOthelloAB"
+        mc:Ignorable="d"
+        Title="ArcOthello" Height="450" Width="800">
+    <Grid HorizontalAlignment="Center" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="5*"/>
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+        </Grid.RowDefinitions>
+        <Label Grid.Row="0" x:Name="LblTitle" Content="ArcOthello" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18"/>
+        <Button Grid.Row="1" x:Name="BtnPlay" Content="Play" HorizontalAlignment="Center" Width="66" VerticalAlignment="Center" Click="BtnPlay_Click"/>
+        <Button Grid.Row="2" x:Name="BtnLoad" Content="Load" HorizontalAlignment="Center" Width="66" VerticalAlignment="Center" Click="BtnLoad_Click" IsEnabled="False"/>
+        <Button Grid.Row="3" x:Name="BtnPlayAI" Content="Play with AI" HorizontalAlignment="Center" Width="66" VerticalAlignment="Center" Click="BtnPlayAI_Click" IsEnabled="False"/>
+        <Button Grid.Row="4" x:Name="BtnCredits" Content="Credits" HorizontalAlignment="Center" Width="66" VerticalAlignment="Center" Click="BtnCredits_Click"/>
+    </Grid>
+</Window>

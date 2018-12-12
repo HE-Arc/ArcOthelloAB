@@ -10,19 +10,27 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace ArcOthelloAB
 {
     /// <summary>
-    /// Logique d'interaction pour MainWindow.xaml
+    /// Logique d'interaction pour Othello.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class Othello : Window
     {
-        public MainWindow()
+        private Window parent;
+
+        public Othello(Window parent)
         {
+            this.parent = parent;
             InitializeComponent();
+        }
+
+        private void BtnBack_Click(object sender, RoutedEventArgs e)
+        {
+            parent.Show();
+            this.Close();
         }
     }
 }
