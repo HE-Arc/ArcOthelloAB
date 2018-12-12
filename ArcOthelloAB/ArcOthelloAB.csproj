@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F6F83FA6-F102-445C-9726-9660E3D6022D}</ProjectGuid>
+    <ProjectGuid>{4102665B-1905-49EC-AD83-412F40C92FE7}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>ArcOtherlloAB</RootNamespace>
-    <AssemblyName>ArcOtherlloAB</AssemblyName>
+    <RootNamespace>ArcOthelloAB</RootNamespace>
+    <AssemblyName>ArcOthelloAB</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>

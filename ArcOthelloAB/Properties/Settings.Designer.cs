@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ArcOtherlloAB.Properties
+namespace ArcOthelloAB.Properties
 {
 
 
