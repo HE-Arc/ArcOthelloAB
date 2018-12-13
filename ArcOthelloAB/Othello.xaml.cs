@@ -21,14 +21,20 @@ namespace ArcOthelloAB
     {
         private Window parent;
 
+        public static readonly DependencyProperty IsAvailableProperty =
+            DependencyProperty.Register(
+            "isAvailable", typeof(Boolean),
+            typeof(Othello)
+            );
+
         public Othello(Window parent)
         {
             this.parent = parent;
             InitializeComponent();
 
-            for (int i = 0; i < 7; i++)
+            for (int i = 0; i < 9; i++)
             {
-                for (int j = 0; j < 9; j++)
+                for (int j = 0; j < 7; j++)
                 {
                     Button btn = new Button();
                     btn.Content = i + " , " + j;
@@ -36,12 +42,16 @@ namespace ArcOthelloAB
                     int btnY = j;
                     btn.Click += (sender, e) =>
                     {
-                        buttonAction1(btnX, btnY);
+                        ButtonAction1(btnX, btnY);
                     };
                     this.GameGrid.Children.Add(btn);
-                    Grid.SetRow(btn, i);
-                    Grid.SetColumn(btn, j);
+                    Grid.SetRow(btn, j);
+                    Grid.SetColumn(btn, i);
                 }
+            }
+            foreach (UIElement child in this.GameGrid.Children)
+            {
+                child.SetValue(IsAvailableProperty, false);
             }
         }
 
@@ -56,9 +66,27 @@ namespace ArcOthelloAB
             parent.Show();
         }
 
-        protected void buttonAction1(int x, int y)
+        private static UIElement GetChildren(Grid grid, int row, int column)
+        {
+            foreach (UIElement child in grid.Children)
+            {
+                if (Grid.GetRow(child) == row && Grid.GetColumn(child) == column)
+                {
+                    return child;
+                }
+            }
+            return null;
+        }
+
+        protected void ButtonAction1(int x, int y)
         {
             MessageBox.Show(this, "Hello, button : " + x + " , " + y);
+            int xtemp = x+1;
+            if (xtemp >= 7)
+                xtemp = 0;
+            UIElement adjascentButton = GetChildren(this.GameGrid, xtemp, y);
+            MessageBox.Show(this, "adjascent button " + xtemp + "," + y + " isAvailable?: " + adjascentButton.GetValue(IsAvailableProperty));
+            adjascentButton.SetValue(IsAvailableProperty, true);
         }
     }
 }
