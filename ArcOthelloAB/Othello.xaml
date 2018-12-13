@@ -17,10 +17,49 @@
             <RowDefinition Height="1*"/>
             <RowDefinition Height="4*" />
         </Grid.RowDefinitions>
-        <Button x:Name="BtnBack" Grid.Row="1" Grid.Column="2" Content="Back" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" Click="BtnBack_Click"/>
-        <Label x:Name="LblPlayer1" Content="Player1" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <Label x:Name="lblPlayer2" Content="Player2" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <!-- First Row-->
+        <Grid x:Name="GridInfoPlayer1" Grid.Row="0" Grid.Column="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
+            <Label x:Name="LblPlayer1" Content="Player 1" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+            <Label x:Name="LblScorePlayer1" Grid.Row="1" Grid.Column="1" Content="Score" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <Label x:Name="LblTimePlayer1" Grid.Row="2" Grid.Column="1" Content="Time" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+        </Grid>
+
+        <Grid x:Name="GridInfoPlayer2" Grid.Row="0" Grid.Column="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="1*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*" />
+                <RowDefinition Height="1*" />
+            </Grid.RowDefinitions>
+            <Label x:Name="lblPlayer2" Content="Player2" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <Label x:Name="LblScorePlayer2" Grid.Row="1" Grid.Column="0" Content="Score" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+            <Label x:Name="LblTimePlayer2" Grid.Row="2" Grid.Column="0" Content="Time" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+        </Grid>
+        <!-- Second Row-->
         <Rectangle Grid.Column="1" Fill="#FFF4F4F5"  Grid.Row="1" Stroke="Black"/>
         <Label x:Name="label" Content="GridOthello" Grid.Column="1" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Center"/>
+        <StackPanel  Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <!-- https://stackoverflow.com/questions/932510/how-do-i-space-out-the-child-elements-of-a-stackpanel -->
+            <StackPanel.Resources>
+                <Style TargetType="{x:Type Button}">
+                    <Setter Property="Margin" Value="0,10,0,0"/>
+                </Style>
+            </StackPanel.Resources>
+            <Button x:Name="BtnSettings" Content="Setting" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" Click="BtnSettings_Click" IsEnabled="False"/>
+            <Button x:Name="BtnLoad" Content="Load" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" Click="BtnLoad_Click" IsEnabled="False"/>
+            <Button x:Name="BtnBack" Content="Back" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" Click="BtnBack_Click"/>
+        </StackPanel>
     </Grid>
 </Window>
