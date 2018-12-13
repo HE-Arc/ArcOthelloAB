@@ -55,6 +55,16 @@ namespace ArcOthelloAB
             }
         }
 
+        private void BtnSettings_Click(object sender, RoutedEventArgs e)
+        {
+            // TODO show new window
+        }
+
+        private void BtnLoad_Click(object sender, RoutedEventArgs e)
+        {
+            // TODO load a new game
+        }
+
         private void BtnBack_Click(object sender, RoutedEventArgs e)
         {
             parent.Show();
