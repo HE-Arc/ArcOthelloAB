@@ -23,6 +23,30 @@ namespace ArcOthelloAB
         public MainWindow()
         {
             InitializeComponent();
+
+            for (int i = 0; i < 9; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    Button btn = new Button();
+                    btn.Content = "ok" + i + j;
+                    //btn.Click += (sender, e) => buttonAction1(sender, e, i,j);
+                    int btnX = i;
+                    int btnY = j;
+                    btn.Click += (sender, e) =>
+                    {
+                        buttonAction1(btnX, btnY);
+                    };
+                    this.mainGrid.Children.Add(btn);
+                    Grid.SetRow(btn, i);
+                    Grid.SetColumn(btn, j);
+                }
+            }
+        }
+
+        protected void buttonAction1(int x, int y)
+        {
+            MessageBox.Show(this, "Hello, button : " + x + " , " + y);
         }
     }
 }
