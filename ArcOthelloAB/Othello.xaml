@@ -20,7 +20,28 @@
         <Button x:Name="BtnBack" Grid.Row="1" Grid.Column="2" Content="Back" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" Click="BtnBack_Click"/>
         <Label x:Name="LblPlayer1" Content="Player1" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
         <Label x:Name="lblPlayer2" Content="Player2" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <Rectangle Grid.Column="1" Fill="#FFF4F4F5"  Grid.Row="1" Stroke="Black"/>
-        <Label x:Name="label" Content="GridOthello" Grid.Column="1" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Center"/>
+        <Grid x:Name="GameGrid" Grid.Row="1" Grid.Column="1">
+
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+        </Grid>
     </Grid>
 </Window>

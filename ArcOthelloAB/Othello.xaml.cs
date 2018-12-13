@@ -25,6 +25,24 @@ namespace ArcOthelloAB
         {
             this.parent = parent;
             InitializeComponent();
+
+            for (int i = 0; i < 7; i++)
+            {
+                for (int j = 0; j < 9; j++)
+                {
+                    Button btn = new Button();
+                    btn.Content = i + " , " + j;
+                    int btnX = i;
+                    int btnY = j;
+                    btn.Click += (sender, e) =>
+                    {
+                        buttonAction1(btnX, btnY);
+                    };
+                    this.GameGrid.Children.Add(btn);
+                    Grid.SetRow(btn, i);
+                    Grid.SetColumn(btn, j);
+                }
+            }
         }
 
         private void BtnBack_Click(object sender, RoutedEventArgs e)
@@ -36,6 +54,11 @@ namespace ArcOthelloAB
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             parent.Show();
+        }
+
+        protected void buttonAction1(int x, int y)
+        {
+            MessageBox.Show(this, "Hello, button : " + x + " , " + y);
         }
     }
 }
