@@ -21,9 +21,23 @@ namespace ArcOthelloAB
     {
         private Window parent;
 
+        private static int ROW_LENGHT = 7;
+        private static int COLLUMN_LENGHT = 9;
+
         public static readonly DependencyProperty IsAvailableProperty =
             DependencyProperty.Register(
             "isAvailable", typeof(Boolean),
+            typeof(Othello)
+            );
+
+        /*
+         * Status = 0: has no pawn
+         * Status = 1: has black pawn
+         * Status = 2: has white pawn
+         */
+        public static readonly DependencyProperty CurrentStatus =
+            DependencyProperty.Register(
+            "currentStatus", typeof(int),
             typeof(Othello)
             );
 
@@ -32,9 +46,9 @@ namespace ArcOthelloAB
             this.parent = parent;
             InitializeComponent();
 
-            for (int i = 0; i < 9; i++)
+            for (int i = 0; i < COLLUMN_LENGHT; i++)
             {
-                for (int j = 0; j < 7; j++)
+                for (int j = 0; j < ROW_LENGHT; j++)
                 {
                     Button btn = new Button();
                     btn.Content = i + " , " + j;
@@ -92,7 +106,7 @@ namespace ArcOthelloAB
         {
             MessageBox.Show(this, "Hello, button : " + x + " , " + y);
             int xtemp = x+1;
-            if (xtemp >= 7)
+            if (xtemp >= ROW_LENGHT)
                 xtemp = 0;
             UIElement adjascentButton = GetChildren(this.GameGrid, xtemp, y);
             MessageBox.Show(this, "adjascent button " + xtemp + "," + y + " isAvailable?: " + adjascentButton.GetValue(IsAvailableProperty));
