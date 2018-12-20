@@ -30,14 +30,11 @@ namespace ArcOthelloAB
             typeof(Othello)
             );
 
-        /*
-         * Status = 0: has no pawn
-         * Status = 1: has black pawn
-         * Status = 2: has white pawn
-         */
+        enum Status { NoPawn=0, BlackPawn=1, WhitePawn=2 };
+        // Uses the Status enum for the state
         public static readonly DependencyProperty CurrentStatus =
             DependencyProperty.Register(
-            "currentStatus", typeof(int),
+            "currentStatus", typeof(Status),
             typeof(Othello)
             );
 
@@ -46,6 +43,11 @@ namespace ArcOthelloAB
             this.parent = parent;
             InitializeComponent();
 
+            setupButtons();
+        }
+
+        private void setupButtons()
+        {
             for (int i = 0; i < COLLUMN_LENGHT; i++)
             {
                 for (int j = 0; j < ROW_LENGHT; j++)
@@ -56,17 +58,26 @@ namespace ArcOthelloAB
                     int btnY = j;
                     btn.Click += (sender, e) =>
                     {
-                        ButtonAction1(btnX, btnY);
+                        ButtonAction1(btnX, btnY); // temporary
                     };
-                    this.GameGrid.Children.Add(btn);
-                    Grid.SetRow(btn, j);
-                    Grid.SetColumn(btn, i);
+                    this.GameGrid.Children.Add(btn); // add button as children to gamegrid
+                    Grid.SetRow(btn, j); // search the btn contained in a grid and setup a row position
+                    Grid.SetColumn(btn, i); // setup a column
                 }
             }
+
+            // initiate property of each button
             foreach (UIElement child in this.GameGrid.Children)
             {
                 child.SetValue(IsAvailableProperty, false);
+                child.SetValue(CurrentStatus, Status.NoPawn);
             }
+
+            // setup initial board
+            GetButton(4, 4).SetValue(CurrentStatus, Status.WhitePawn);
+            GetButton(5, 4).SetValue(CurrentStatus, Status.BlackPawn);
+            GetButton(4, 5).SetValue(CurrentStatus, Status.BlackPawn);
+            GetButton(5, 5).SetValue(CurrentStatus, Status.WhitePawn);
         }
 
         private void BtnSettings_Click(object sender, RoutedEventArgs e)
@@ -90,8 +101,12 @@ namespace ArcOthelloAB
             parent.Show();
         }
 
-        private static UIElement GetChildren(Grid grid, int row, int column)
+        /*
+         * get an element of the board grid according to it's row and column
+         */
+        private UIElement GetButton(int column, int row)
         {
+            Grid grid = this.GameGrid;
             foreach (UIElement child in grid.Children)
             {
                 if (Grid.GetRow(child) == row && Grid.GetColumn(child) == column)
@@ -102,13 +117,16 @@ namespace ArcOthelloAB
             return null;
         }
 
+        /*
+         * temporary
+         */
         protected void ButtonAction1(int x, int y)
         {
             MessageBox.Show(this, "Hello, button : " + x + " , " + y);
             int xtemp = x+1;
-            if (xtemp >= ROW_LENGHT)
+            if (xtemp >= COLLUMN_LENGHT)
                 xtemp = 0;
-            UIElement adjascentButton = GetChildren(this.GameGrid, xtemp, y);
+            UIElement adjascentButton = GetButton(xtemp, y);
             MessageBox.Show(this, "adjascent button " + xtemp + "," + y + " isAvailable?: " + adjascentButton.GetValue(IsAvailableProperty));
             adjascentButton.SetValue(IsAvailableProperty, true);
         }
