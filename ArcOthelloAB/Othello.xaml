@@ -78,7 +78,7 @@
                 </Style>
             </StackPanel.Resources>
             <Button x:Name="BtnSettings" Content="Setting" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" Click="BtnSettings_Click" IsEnabled="False"/>
-            <Button x:Name="BtnLoad" Content="Load" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" Click="BtnLoad_Click" IsEnabled="False"/>
+            <Button x:Name="BtnLoad" Content="Load" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" Click="BtnLoad_Click"/>
             <Button x:Name="BtnBack" Content="Back" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" Click="BtnBack_Click"/>
         </StackPanel>
     </Grid>

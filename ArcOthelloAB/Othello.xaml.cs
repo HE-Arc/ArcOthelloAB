@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Microsoft.Win32;
 
 namespace ArcOthelloAB
 {
@@ -25,6 +26,8 @@ namespace ArcOthelloAB
         private static int TOTAL_COLLUMN = 9;
 
         private UIElement[,] buttons;
+
+        private OthelloBoard othelloBoard;
 
         public static readonly DependencyProperty IsAvailableProperty =
             DependencyProperty.Register(
@@ -46,6 +49,8 @@ namespace ArcOthelloAB
             InitializeComponent();
 
             setupButtons();
+
+            othelloBoard = OthelloBoard.getInstance();
         }
 
         private void setupButtons()
@@ -117,7 +122,24 @@ namespace ArcOthelloAB
 
         private void BtnLoad_Click(object sender, RoutedEventArgs e)
         {
-            // TODO load a new game
+            string filePath = string.Empty;
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                // TODO Change settings
+                InitialDirectory = "c:\\",
+                Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*",
+                FilterIndex = 2,
+                RestoreDirectory = true
+            };
+            if (openFileDialog.ShowDialog() == true)
+            {
+                //Get the path of specified file
+                filePath = openFileDialog.FileName;
+
+                MessageBox.Show(this, "Path : " + filePath);
+
+                //othelloBoard.LoadFromFile(filePath);
+            }
         }
 
         private void BtnBack_Click(object sender, RoutedEventArgs e)
