@@ -42,15 +42,15 @@ namespace ArcOthelloAB
             typeof(Othello)
             );
 
-        private DateTime timePlayedBlack;
-        public DateTime TimePlayedBlack
+        private int timePlayedBlack;    // Seconds
+        public int TimePlayedBlack
         {
             get { return timePlayedBlack; }
             set { timePlayedBlack = value; RaisePropertyChanged("TimePlayedBlack"); }
         }
 
-        private DateTime timePlayedWhite;
-        public DateTime TimePlayedWhite
+        private int timePlayedWhite;    // Seconds
+        public int TimePlayedWhite
         {
             get { return timePlayedWhite; }
             set { timePlayedWhite = value; RaisePropertyChanged("TimePlayedWhite"); }
@@ -58,10 +58,7 @@ namespace ArcOthelloAB
 
         void RaisePropertyChanged(string propertyName)
         {
-            if(PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -76,8 +73,8 @@ namespace ArcOthelloAB
 
             setupButtons();
 
-            timePlayedWhite = new DateTime(0);
-            timePlayedBlack = new DateTime(0);
+            timePlayedWhite = 0;
+            timePlayedBlack = 0;
         }
 
         /// <summary>

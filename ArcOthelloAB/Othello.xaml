@@ -18,7 +18,7 @@
             <RowDefinition Height="4*" />
         </Grid.RowDefinitions>
         <!-- First Row-->
-        <Grid x:Name="GridInfoPlayer1" Grid.Row="0" Grid.Column="0">
+        <Grid x:Name="GridInfoPlayerWhite" Grid.Row="0" Grid.Column="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*" />
                 <ColumnDefinition Width="2*" />
@@ -28,12 +28,12 @@
                 <RowDefinition Height="1*" />
                 <RowDefinition Height="1*" />
             </Grid.RowDefinitions>
-            <Label x:Name="LblPlayer1" Content="Player 1" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-            <Label x:Name="LblScorePlayer1" Grid.Row="1" Grid.Column="1" Content="Score" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-            <Label x:Name="LblTimePlayer1" Grid.Row="2" Grid.Column="1" Content="{ Binding  Value, ElementName=TimePlayedWhite }" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <Label x:Name="LblPlayerWhite" Content="Player White" Grid.Row="0" Grid.ColumnSpan="2" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <Label x:Name="LblScorePlayerWhite" Grid.Row="1" Grid.Column="1" Content="Score" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <Label x:Name="LblTimePlayerWhite" Grid.Row="2" Grid.Column="1" Content="{ Binding  TimePlayedWhite }" HorizontalAlignment="Left" VerticalAlignment="Center"/>
         </Grid>
 
-        <Grid x:Name="GridInfoPlayer2" Grid.Row="0" Grid.Column="2">
+        <Grid x:Name="GridInfoPlayerBlack" Grid.Row="0" Grid.Column="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="2*" />
                 <ColumnDefinition Width="1*" />
@@ -43,9 +43,9 @@
                 <RowDefinition Height="1*" />
                 <RowDefinition Height="1*" />
             </Grid.RowDefinitions>
-            <Label x:Name="lblPlayer2" Content="Player2" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-            <Label x:Name="LblScorePlayer2" Grid.Row="1" Grid.Column="0" Content="Score" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-            <Label x:Name="LblTimePlayer2" Grid.Row="2" Grid.Column="0" Content="Time" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+            <Label x:Name="lblPlayerBlack" Content="Player Black" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+            <Label x:Name="LblScorePlayerBlack" Grid.Row="1" Grid.Column="0" Content="Score" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+            <Label x:Name="LblTimePlayerBlack" Grid.Row="2" Grid.Column="0" Content="{ Binding  TimePlayedBlack }" HorizontalAlignment="Right" VerticalAlignment="Center"/>
         </Grid>
         <!-- Second Row-->
         <Grid x:Name="GameGrid" Grid.Row="1" Grid.Column="1">

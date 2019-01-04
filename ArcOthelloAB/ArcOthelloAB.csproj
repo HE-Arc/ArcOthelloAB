@@ -79,7 +79,6 @@
     <Compile Include="Othello.xaml.cs">
       <DependentUpon>Othello.xaml</DependentUpon>
     </Compile>
-    <Compile Include="OthelloBoard.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
