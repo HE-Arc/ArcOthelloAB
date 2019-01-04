@@ -19,7 +19,7 @@ namespace ArcOthelloAB
     /// <summary>
     /// Logique d'interaction pour Othello.xaml
     /// </summary>
-    public partial class Othello : Window, IPlayable.IPlayable, INotifyPropertyChanged
+    public partial class Othello : Window, IPlayable.IPlayable
     {
         // UI properties
         private Window parent;
@@ -43,27 +43,9 @@ namespace ArcOthelloAB
             typeof(Othello)
             );
 
-        private int timePlayedBlack;    // Seconds
-        public int TimePlayedBlack
-        {
-            get { return timePlayedBlack; }
-            set { timePlayedBlack = value; RaisePropertyChanged("TimePlayedBlack"); }
-        }
-
-        private int timePlayedWhite;    // Seconds
-        public int TimePlayedWhite
-        {
-            get { return timePlayedWhite; }
-            set { timePlayedWhite = value; RaisePropertyChanged("TimePlayedWhite"); }
-        }
-
         private bool AIPlayer;
 
-        void RaisePropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        public event PropertyChangedEventHandler PropertyChanged;
+        private TimeHandler context;
 
         // Files properties
         private static string FILE_FORMAT = "Text file (*.txt)|*.txt";
@@ -89,8 +71,11 @@ namespace ArcOthelloAB
 
             setupButtons();
 
-            timePlayedWhite = 0;
-            timePlayedBlack = 0;
+            context = new TimeHandler { TimePlayedWhite = 10 , TimePlayedBlack = 5};
+
+            DataContext = context;
+
+            context.TimePlayedWhite += 5;
 
             if (aiPlayer)
             {
@@ -393,8 +378,8 @@ namespace ArcOthelloAB
             sb.AppendFormat(MONOVALUE_FORMAT, "Enable", AIPlayer.ToString()).AppendLine();
             //  Time
             sb.AppendLine(TIME_HEADER);
-            sb.AppendFormat(MONOVALUE_FORMAT, WHITE, timePlayedWhite.ToString(TIME_DIGITS_FORMAT)).AppendLine();
-            sb.AppendFormat(MONOVALUE_FORMAT, BLACK, timePlayedBlack.ToString(TIME_DIGITS_FORMAT)).AppendLine();
+            sb.AppendFormat(MONOVALUE_FORMAT, WHITE, context.TimePlayedWhite.ToString(TIME_DIGITS_FORMAT)).AppendLine();
+            sb.AppendFormat(MONOVALUE_FORMAT, BLACK, context.TimePlayedBlack.ToString(TIME_DIGITS_FORMAT)).AppendLine();
             //  Game
             sb.AppendLine(GAME_HEADER);
             int[,] board = GetBoard();
