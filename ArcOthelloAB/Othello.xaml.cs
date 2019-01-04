@@ -12,13 +12,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Microsoft.Win32;
+using System.ComponentModel;
 
 namespace ArcOthelloAB
 {
     /// <summary>
     /// Logique d'interaction pour Othello.xaml
     /// </summary>
-    public partial class Othello : Window
+    public partial class Othello : Window, IPlayable.IPlayable, INotifyPropertyChanged
     {
         private Window parent;
 
@@ -26,8 +27,6 @@ namespace ArcOthelloAB
         private static int TOTAL_COLLUMN = 9;
 
         private UIElement[,] buttons;
-
-        private OthelloBoard othelloBoard;
 
         public static readonly DependencyProperty IsAvailableProperty =
             DependencyProperty.Register(
@@ -43,6 +42,33 @@ namespace ArcOthelloAB
             typeof(Othello)
             );
 
+        private DateTime timePlayedBlack;
+        public DateTime TimePlayedBlack
+        {
+            get { return timePlayedBlack; }
+            set { timePlayedBlack = value; RaisePropertyChanged("TimePlayedBlack"); }
+        }
+
+        private DateTime timePlayedWhite;
+        public DateTime TimePlayedWhite
+        {
+            get { return timePlayedWhite; }
+            set { timePlayedWhite = value; RaisePropertyChanged("TimePlayedWhite"); }
+        }
+
+        void RaisePropertyChanged(string propertyName)
+        {
+            if(PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
+        }
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// Construct an Othello Game
+        /// </summary>
+        /// <param name="parent">parent Window</param>
         public Othello(Window parent)
         {
             this.parent = parent;
@@ -50,7 +76,18 @@ namespace ArcOthelloAB
 
             setupButtons();
 
-            othelloBoard = OthelloBoard.getInstance();
+            timePlayedWhite = new DateTime(0);
+            timePlayedBlack = new DateTime(0);
+        }
+
+        /// <summary>
+        /// Construct an Othello Game from a game file
+        /// </summary>
+        /// <param name="parent">parent Window</param>
+        /// <param name="filePath">path of the file game</param>
+        public Othello(Window parent, string filePath) : this(parent)
+        {
+            //LoadFromFile(filePath);
         }
 
         private void setupButtons()
@@ -195,7 +232,7 @@ namespace ArcOthelloAB
          * The direction is given by a movement in x and y: dirX and dirY argument
          * These value should be {-1,0,1} with at least one of the two not set at 0
          * 
-         * the osition of empty square is given by x and y argument
+         * the position of empty square is given by x and y argument
          */
         private bool CheckOtherPawnFromDirection (int dirX, int dirY, int x, int y, Status currentStatus)
         {
@@ -238,6 +275,101 @@ namespace ArcOthelloAB
                 return true;
             else
                 return false;
+        }
+
+        /// <summary>
+        /// Load a game from a file
+        /// <param name=path>path of the game file</param>
+        /// <returns>success</returns>
+        /// </summary>
+        private bool LoadFromFile(string path)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Save a game in a specific file
+        /// <param name=path>path of the game file</param>
+        /// <returns>success</returns>
+        /// </summary>
+        private bool SaveInFile(string path)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Count the score of a pawn type
+        /// <param name=pawnType>pawn type (WHITE_PAWN or BLACK_PAWN)</param>
+        /// <returns>score of pawnType</returns>
+        /// </summary>
+        private int GetScore(Status pawnStatus)
+        {
+            int score = 0;
+            foreach (var button in buttons)
+            {
+                if ((Status)button.GetValue(CurrentStatus) == pawnStatus)
+                    score++;
+            }
+            return score;
+        }
+
+        ///
+        /// IPlayable functions
+        ///
+
+        public int[,] GetBoard()
+        {
+            int[,] intBoard = new int[TOTAL_COLLUMN, TOTAL_ROW];
+
+            for (int i = 0; i < TOTAL_COLLUMN; i++)
+            {
+                for (int j = 0; j < TOTAL_ROW; j++)
+                {
+                    switch ((Status)buttons[i, j].GetValue(CurrentStatus))
+                    {
+                        case Status.NoPawn:
+                            intBoard[i, j] = 0;
+                            break;
+                        case Status.WhitePawn:
+                            intBoard[i, j] = 1;
+                            break;
+                        case Status.BlackPawn:
+                            intBoard[i, j] = 2;
+                            break;
+                    }
+                }
+            }
+            return intBoard;
+        }
+
+        public string GetName()
+        {
+            return "OthelloBoard";
+        }
+
+        public Tuple<int, int> GetNextMove(int[,] game, int level, bool whiteTurn)
+        {
+            throw new NotImplementedException();
+        }
+
+        public int GetWhiteScore()
+        {
+            return GetScore(Status.WhitePawn);
+        }
+
+        public int GetBlackScore()
+        {
+            return GetScore(Status.BlackPawn);
+        }
+
+        public bool IsPlayable(int column, int line, bool isWhite)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool PlayMove(int column, int line, bool isWhite)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -30,7 +30,7 @@
             </Grid.RowDefinitions>
             <Label x:Name="LblPlayer1" Content="Player 1" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center"/>
             <Label x:Name="LblScorePlayer1" Grid.Row="1" Grid.Column="1" Content="Score" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-            <Label x:Name="LblTimePlayer1" Grid.Row="2" Grid.Column="1" Content="Time" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <Label x:Name="LblTimePlayer1" Grid.Row="2" Grid.Column="1" Content="{ Binding  Value, ElementName=TimePlayedWhite }" HorizontalAlignment="Left" VerticalAlignment="Center"/>
         </Grid>
 
         <Grid x:Name="GridInfoPlayer2" Grid.Row="0" Grid.Column="2">
