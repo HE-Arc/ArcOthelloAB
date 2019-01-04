@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.Win32;
 
 namespace ArcOthelloAB
 {
@@ -20,6 +21,8 @@ namespace ArcOthelloAB
     /// </summary>
     public partial class Home : Window
     {
+        private static string FILE_FORMAT = "Text file (*.txt)|*.txt";
+
         public Home()
         {
             InitializeComponent();
@@ -33,7 +36,19 @@ namespace ArcOthelloAB
 
         private void BtnLoad_Click(object sender, RoutedEventArgs e)
         {
-            // TODO
+            string filePath = string.Empty;
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal),
+                Filter = FILE_FORMAT,
+            };
+            if (openFileDialog.ShowDialog() == true)
+            {
+                //Get the path of specified file
+                filePath = openFileDialog.FileName;
+                new Othello(this, filePath).Show();
+                Hide();
+            }
         }
 
         private void BtnPlayAI_Click(object sender, RoutedEventArgs e)

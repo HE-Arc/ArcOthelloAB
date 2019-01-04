@@ -68,6 +68,8 @@ namespace ArcOthelloAB
         // Files properties
         private static string FILE_FORMAT = "Text file (*.txt)|*.txt";
         private static string DATETIME_FORMAT = "yyyy-MM-dd_HH-mm-ss";
+        private static string NAME = "ArcOthelloAB";
+        private static string AI_HEADER = "--AI--";
         private static string TIME_HEADER = "--Time--";
         private static string GAME_HEADER = "--Game--";
         private static string WHITE = "w";
@@ -104,8 +106,16 @@ namespace ArcOthelloAB
         /// <param name="filePath">path of the file game</param>
         public Othello(Window parent, string filePath) : this(parent)
         {
-            //LoadFromFile(filePath);
-            // if the file registered an AI, start it
+            try
+            {
+                LoadFromFile(filePath);
+                // if the file registered an AI, start it
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, ex.Message);
+                BtnBack_Click(null, null);
+            }
         }
 
         private void setupButtons()
@@ -214,7 +224,6 @@ namespace ArcOthelloAB
             string filePath = string.Empty;
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
-                // TODO Change settings
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal),
                 Filter = FILE_FORMAT,
             };
@@ -339,9 +348,32 @@ namespace ArcOthelloAB
         /// <param name=path>path of the game file</param>
         /// <returns>success</returns>
         /// </summary>
-        private bool LoadFromFile(string path)
+        private void LoadFromFile(string path)
         {
-            throw new NotImplementedException();
+            string[] lines = System.IO.File.ReadAllLines(path);
+            if (!ValidateFile(lines))
+                throw new Exception("Invalid File");
+
+            // TODO Parse file
+            
+        }
+
+        private static bool ValidateFile(string[] content)
+        {
+            if (content.Length != 70)
+                return false;
+            if (!String.Equals(content[0], NAME))
+                return false;
+            if (!String.Equals(content[1], AI_HEADER))
+                return false;
+            if (!String.Equals(content[3], TIME_HEADER))
+                return false;
+            if (!String.Equals(content[6], GAME_HEADER))
+                return false;
+
+            // TODO Imporove validation
+
+            return true;
         }
 
         /// <summary>
@@ -357,7 +389,8 @@ namespace ArcOthelloAB
             //  Name
             sb.AppendLine(GetName());
             //  AI
-            sb.AppendFormat(MONOVALUE_FORMAT, "AI", AIPlayer.ToString()).AppendLine();
+            sb.AppendLine(AI_HEADER);
+            sb.AppendFormat(MONOVALUE_FORMAT, "Enable", AIPlayer.ToString()).AppendLine();
             //  Time
             sb.AppendLine(TIME_HEADER);
             sb.AppendFormat(MONOVALUE_FORMAT, WHITE, timePlayedWhite.ToString(TIME_DIGITS_FORMAT)).AppendLine();
@@ -423,7 +456,7 @@ namespace ArcOthelloAB
 
         public string GetName()
         {
-            return "ArcOthelloAB";
+            return NAME;
         }
 
         public Tuple<int, int> GetNextMove(int[,] game, int level, bool whiteTurn)

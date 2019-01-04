@@ -19,7 +19,7 @@
         </Grid.RowDefinitions>
         <Label Grid.Row="0" x:Name="LblTitle" Content="ArcOthello" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="18"/>
         <Button Grid.Row="1" x:Name="BtnPlay" Content="Play" HorizontalAlignment="Center" Width="66" VerticalAlignment="Center" Click="BtnPlay_Click"/>
-        <Button Grid.Row="2" x:Name="BtnLoad" Content="Load" HorizontalAlignment="Center" Width="66" VerticalAlignment="Center" Click="BtnLoad_Click" IsEnabled="False"/>
+        <Button Grid.Row="2" x:Name="BtnLoad" Content="Load" HorizontalAlignment="Center" Width="66" VerticalAlignment="Center" Click="BtnLoad_Click"/>
         <Button Grid.Row="3" x:Name="BtnPlayAI" Content="Play with AI" HorizontalAlignment="Center" Width="66" VerticalAlignment="Center" Click="BtnPlayAI_Click" IsEnabled="False"/>
         <Button Grid.Row="4" x:Name="BtnCredits" Content="Credits" HorizontalAlignment="Center" Width="66" VerticalAlignment="Center" Click="BtnCredits_Click"/>
     </Grid>
