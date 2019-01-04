@@ -21,11 +21,8 @@ namespace ArcOthelloAB
     /// </summary>
     public partial class Othello : Window, IPlayable.IPlayable, INotifyPropertyChanged
     {
+        // UI properties
         private Window parent;
-
-        private static int TOTAL_ROW = 7;
-        private static int TOTAL_COLLUMN = 9;
-
         private UIElement[,] buttons;
 
         public static readonly DependencyProperty IsAvailableProperty =
@@ -34,11 +31,15 @@ namespace ArcOthelloAB
             typeof(Othello)
             );
 
-        enum Status { NoPawn=0, BlackPawn=1, WhitePawn=2 };
-        // Uses the Status enum for the state
+        // Game Properties
+        private static int TOTAL_ROW = 7;
+        private static int TOTAL_COLLUMN = 9;
+
+        enum SquareStatus { NoPawn=0, BlackPawn=1, WhitePawn=2 };
+        // Uses the SquareStatus enum for the state
         public static readonly DependencyProperty CurrentStatus =
             DependencyProperty.Register(
-            "currentStatus", typeof(Status),
+            "currentStatus", typeof(SquareStatus),
             typeof(Othello)
             );
 
@@ -56,17 +57,30 @@ namespace ArcOthelloAB
             set { timePlayedWhite = value; RaisePropertyChanged("TimePlayedWhite"); }
         }
 
+        private bool AIPlayer;
+
         void RaisePropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         public event PropertyChangedEventHandler PropertyChanged;
 
+        // Files properties
+        private static string FILE_FORMAT = "Text file (*.txt)|*.txt";
+        private static string DATETIME_FORMAT = "yyyy-MM-dd_HH-mm-ss";
+        private static string TIME_HEADER = "--Time--";
+        private static string GAME_HEADER = "--Game--";
+        private static string WHITE = "w";
+        private static string BLACK = "b";
+        private static string TIME_DIGITS_FORMAT = "D10";
+        private static string MONOVALUE_FORMAT = "{0}:{1}";
+        private static string SQUARE_FORMAT = "[{0},{1}]:{2}";
+
         /// <summary>
         /// Construct an Othello Game
         /// </summary>
         /// <param name="parent">parent Window</param>
-        public Othello(Window parent)
+        public Othello(Window parent, bool aiPlayer = false)
         {
             this.parent = parent;
             InitializeComponent();
@@ -75,6 +89,12 @@ namespace ArcOthelloAB
 
             timePlayedWhite = 0;
             timePlayedBlack = 0;
+
+            if (aiPlayer)
+            {
+                AIPlayer = aiPlayer;
+                // start the AI
+            }
         }
 
         /// <summary>
@@ -85,6 +105,7 @@ namespace ArcOthelloAB
         public Othello(Window parent, string filePath) : this(parent)
         {
             //LoadFromFile(filePath);
+            // if the file registered an AI, start it
         }
 
         private void setupButtons()
@@ -115,20 +136,20 @@ namespace ArcOthelloAB
             foreach (UIElement child in this.GameGrid.Children)
             {
                 child.SetValue(IsAvailableProperty, false);
-                child.SetValue(CurrentStatus, Status.NoPawn);
+                child.SetValue(CurrentStatus, SquareStatus.NoPawn);
             }
 
             // setup initial board
-            buttons[3, 3].SetValue(CurrentStatus, Status.WhitePawn);
-            buttons[4, 3].SetValue(CurrentStatus, Status.BlackPawn);
-            buttons[3, 4].SetValue(CurrentStatus, Status.BlackPawn);
-            buttons[4, 4].SetValue(CurrentStatus, Status.WhitePawn);
+            buttons[3, 3].SetValue(CurrentStatus, SquareStatus.WhitePawn);
+            buttons[4, 3].SetValue(CurrentStatus, SquareStatus.BlackPawn);
+            buttons[3, 4].SetValue(CurrentStatus, SquareStatus.BlackPawn);
+            buttons[4, 4].SetValue(CurrentStatus, SquareStatus.WhitePawn);
 
             for (int i = 0; i < TOTAL_COLLUMN; i++)
             {
                 for (int j = 0; j < TOTAL_ROW; j++)
                 {
-                    if((Status)buttons[i,j].GetValue(CurrentStatus) == Status.NoPawn)
+                    if((SquareStatus)buttons[i,j].GetValue(CurrentStatus) == SquareStatus.NoPawn)
                         UpdateButtonAvailability(i, j);
                 }
             }
@@ -154,16 +175,48 @@ namespace ArcOthelloAB
             // TODO show new window
         }
 
+        private static string GenerateGameFileName()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("ArcOthello_Game_");
+            sb.Append(DateTime.Now.ToString(DATETIME_FORMAT));
+            sb.Append(".txt");
+            return sb.ToString();
+        }
+
+        private void BtnSave_Click(Object sender, RoutedEventArgs e)
+        {
+            string filePath = string.Empty;
+            SaveFileDialog saveFileDialog = new SaveFileDialog()
+            {
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal),
+                Filter = FILE_FORMAT,
+                FileName = GenerateGameFileName(),
+            };
+            if(saveFileDialog.ShowDialog() == true)
+            {
+                filePath = saveFileDialog.FileName;
+                MessageBox.Show(this, "Path : " + filePath);
+
+                try
+                {
+                    SaveInFile(filePath);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(this, ex.Message);
+                }
+            }
+        }
+
         private void BtnLoad_Click(object sender, RoutedEventArgs e)
         {
             string filePath = string.Empty;
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
                 // TODO Change settings
-                InitialDirectory = "c:\\",
-                Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*",
-                FilterIndex = 2,
-                RestoreDirectory = true
+                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal),
+                Filter = FILE_FORMAT,
             };
             if (openFileDialog.ShowDialog() == true)
             {
@@ -171,8 +224,15 @@ namespace ArcOthelloAB
                 filePath = openFileDialog.FileName;
 
                 MessageBox.Show(this, "Path : " + filePath);
-
-                //othelloBoard.LoadFromFile(filePath);
+                
+                try
+                {
+                    LoadFromFile(filePath);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(this, ex.Message);
+                }
             }
         }
 
@@ -214,7 +274,7 @@ namespace ArcOthelloAB
             {
                 int dirX = directionToCheck[i, 0];
                 int dirY = directionToCheck[i, 1];
-                if (CheckOtherPawnFromDirection(dirX, dirY, x, y, Status.BlackPawn))
+                if (CheckOtherPawnFromDirection(dirX, dirY, x, y, SquareStatus.BlackPawn))
                     isPlayable = true;
             }
             if (isPlayable)
@@ -231,7 +291,7 @@ namespace ArcOthelloAB
          * 
          * the position of empty square is given by x and y argument
          */
-        private bool CheckOtherPawnFromDirection (int dirX, int dirY, int x, int y, Status currentStatus)
+        private bool CheckOtherPawnFromDirection (int dirX, int dirY, int x, int y, SquareStatus currentStatus)
         {
             if (dirX == 0 && dirY == 0)
                 return false;
@@ -244,13 +304,13 @@ namespace ArcOthelloAB
             UIElement currentButton = buttons[x, y];
 
             // get the color of the current ennemy
-            Status opponentStatus;
-            if (currentStatus == Status.BlackPawn)
-                opponentStatus = Status.WhitePawn;
+            SquareStatus opponentStatus;
+            if (currentStatus == SquareStatus.BlackPawn)
+                opponentStatus = SquareStatus.WhitePawn;
             else
-                opponentStatus = Status.BlackPawn;
+                opponentStatus = SquareStatus.BlackPawn;
 
-            Status nextPawnStatus = (Status)currentButton.GetValue(CurrentStatus);
+            SquareStatus nextPawnStatus = (SquareStatus)currentButton.GetValue(CurrentStatus);
 
             bool hasAtLeastOneEnnemy = false;
 
@@ -264,7 +324,7 @@ namespace ArcOthelloAB
                 if (x < 0 || x >= TOTAL_COLLUMN || y < 0 || y >= TOTAL_ROW)
                     return false;
                 currentButton = buttons[x, y];
-                nextPawnStatus = (Status)currentButton.GetValue(CurrentStatus);
+                nextPawnStatus = (SquareStatus)currentButton.GetValue(CurrentStatus);
             }
 
             // when a checked pawn isn't ennemy pawn, if it one of his pawn, he can place his pawn in the checked square
@@ -285,13 +345,35 @@ namespace ArcOthelloAB
         }
 
         /// <summary>
-        /// Save a game in a specific file
+        /// Save a game in a specific file. Throws Exceptions
         /// <param name=path>path of the game file</param>
         /// <returns>success</returns>
         /// </summary>
-        private bool SaveInFile(string path)
+        private void SaveInFile(string path)
         {
-            throw new NotImplementedException();
+            StringBuilder sb = new StringBuilder();
+
+            // saving the board
+            //  Name
+            sb.AppendLine(GetName());
+            //  AI
+            sb.AppendFormat(MONOVALUE_FORMAT, "AI", AIPlayer.ToString()).AppendLine();
+            //  Time
+            sb.AppendLine(TIME_HEADER);
+            sb.AppendFormat(MONOVALUE_FORMAT, WHITE, timePlayedWhite.ToString(TIME_DIGITS_FORMAT)).AppendLine();
+            sb.AppendFormat(MONOVALUE_FORMAT, BLACK, timePlayedBlack.ToString(TIME_DIGITS_FORMAT)).AppendLine();
+            //  Game
+            sb.AppendLine(GAME_HEADER);
+            int[,] board = GetBoard();
+            for (int i = 0; i < TOTAL_COLLUMN; i++)
+            {
+                for (int j = 0; j < TOTAL_ROW; j++)
+                {
+                    sb.AppendFormat(SQUARE_FORMAT, i, j, board[i, j]).AppendLine();
+                }
+            }
+
+            System.IO.File.WriteAllText(path, sb.ToString());
         }
 
         /// <summary>
@@ -299,12 +381,12 @@ namespace ArcOthelloAB
         /// <param name=pawnType>pawn type (WHITE_PAWN or BLACK_PAWN)</param>
         /// <returns>score of pawnType</returns>
         /// </summary>
-        private int GetScore(Status pawnStatus)
+        private int GetScore(SquareStatus pawnStatus)
         {
             int score = 0;
             foreach (var button in buttons)
             {
-                if ((Status)button.GetValue(CurrentStatus) == pawnStatus)
+                if ((SquareStatus)button.GetValue(CurrentStatus) == pawnStatus)
                     score++;
             }
             return score;
@@ -322,15 +404,15 @@ namespace ArcOthelloAB
             {
                 for (int j = 0; j < TOTAL_ROW; j++)
                 {
-                    switch ((Status)buttons[i, j].GetValue(CurrentStatus))
+                    switch ((SquareStatus)buttons[i, j].GetValue(CurrentStatus))
                     {
-                        case Status.NoPawn:
+                        case SquareStatus.NoPawn:
                             intBoard[i, j] = 0;
                             break;
-                        case Status.WhitePawn:
+                        case SquareStatus.WhitePawn:
                             intBoard[i, j] = 1;
                             break;
-                        case Status.BlackPawn:
+                        case SquareStatus.BlackPawn:
                             intBoard[i, j] = 2;
                             break;
                     }
@@ -341,7 +423,7 @@ namespace ArcOthelloAB
 
         public string GetName()
         {
-            return "OthelloBoard";
+            return "ArcOthelloAB";
         }
 
         public Tuple<int, int> GetNextMove(int[,] game, int level, bool whiteTurn)
@@ -351,12 +433,12 @@ namespace ArcOthelloAB
 
         public int GetWhiteScore()
         {
-            return GetScore(Status.WhitePawn);
+            return GetScore(SquareStatus.WhitePawn);
         }
 
         public int GetBlackScore()
         {
-            return GetScore(Status.BlackPawn);
+            return GetScore(SquareStatus.BlackPawn);
         }
 
         public bool IsPlayable(int column, int line, bool isWhite)
