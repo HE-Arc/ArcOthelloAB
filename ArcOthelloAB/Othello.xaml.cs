@@ -350,9 +350,45 @@ namespace ArcOthelloAB
             if (!ValidateFile(lines))
                 throw new Exception("Invalid File");
 
-            // TODO Parse file
-            // TimeHandlerContext.TimePlayedWhite = xxxxx;
-            // TimeHandlerContext.TimePlayedBlack = xxxxx;
+            // AI
+            string aiLine = lines[2];
+            string aiPrefix = String.Format(MONOVALUE_FORMAT, "Enable", "");
+            AIPlayer = Convert.ToBoolean(aiLine.Substring(aiPrefix.Length));
+
+            // Time
+            string timeWhiteLine = lines[4];
+            string timeWhitePrefix = string.Format(MONOVALUE_FORMAT, WHITE, "");
+            TimeHandlerContext.TimePlayedWhite = Convert.ToInt32(timeWhiteLine.Substring(timeWhitePrefix.Length));
+            string timeBlackLine = lines[5];
+            string timeBlackPrefix = string.Format(MONOVALUE_FORMAT, BLACK, "");
+            TimeHandlerContext.TimePlayedBlack = Convert.ToInt32(timeBlackLine.Substring(timeBlackPrefix.Length));
+
+            // GAME
+            int i, j, pawnValue = 0;
+            SquareStatus squareStatus;
+            foreach (var item in lines.Skip(7))
+            {
+                // Parse the line
+                i = Convert.ToInt32(item.Substring(1, 1));
+                j = Convert.ToInt32(item.Substring(3, 1));
+                pawnValue = Convert.ToInt32(item.Substring(6, 1));
+                
+                switch(pawnValue)
+                {
+                    case 1:
+                        squareStatus = SquareStatus.WhitePawn;
+                        break;
+                    case 2:
+                        squareStatus = SquareStatus.BlackPawn;
+                        break;
+                    default:
+                        squareStatus = SquareStatus.NoPawn;
+                        break;
+                }
+
+                // Assign the pawn value to the corresponding button
+                buttons[i, j].SetValue(CurrentStatus, squareStatus);
+            }
         }
 
         private static bool ValidateFile(string[] content)
