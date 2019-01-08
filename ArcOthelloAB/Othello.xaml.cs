@@ -34,7 +34,7 @@ namespace ArcOthelloAB
 
         private bool AIPlayer;
 
-        private TimeHandler context;
+        private TimeHandler TimeHandlerContext;
 
         // Files properties
         private static string FILE_FORMAT = "Text file (*.txt)|*.txt";
@@ -61,11 +61,10 @@ namespace ArcOthelloAB
             buttons = new UIElement[TOTAL_COLLUMN, TOTAL_ROW];
             buttonHandler = new ButtonHandler(this.GameGrid, buttons);
 
-            context = new TimeHandler { TimePlayedWhite = 10 , TimePlayedBlack = 5};
+            TimeHandlerContext = new TimeHandler();
 
-            DataContext = context;
-
-            context.TimePlayedWhite += 5;
+            DataContext = TimeHandlerContext;
+            TimeHandlerContext.Start();
 
             if (aiPlayer)
             {
@@ -109,6 +108,7 @@ namespace ArcOthelloAB
 
         private void BtnSave_Click(Object sender, RoutedEventArgs e)
         {
+            TimeHandlerContext.Stop();
             string filePath = string.Empty;
             SaveFileDialog saveFileDialog = new SaveFileDialog()
             {
@@ -130,10 +130,15 @@ namespace ArcOthelloAB
                     MessageBox.Show(this, ex.Message);
                 }
             }
+            else
+            {
+                TimeHandlerContext.Start();
+            }
         }
 
         private void BtnLoad_Click(object sender, RoutedEventArgs e)
         {
+            TimeHandlerContext.Stop();
             string filePath = string.Empty;
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
@@ -150,11 +155,16 @@ namespace ArcOthelloAB
                 try
                 {
                     LoadFromFile(filePath);
+                    TimeHandlerContext.Start();
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show(this, ex.Message);
                 }
+            }
+            else
+            {
+                TimeHandlerContext.Start();
             }
         }
 
@@ -181,7 +191,8 @@ namespace ArcOthelloAB
                 throw new Exception("Invalid File");
 
             // TODO Parse file
-            
+            // TimeHandlerContext.TimePlayedWhite = xxxxx;
+            // TimeHandlerContext.TimePlayedBlack = xxxxx;
         }
 
         private static bool ValidateFile(string[] content)
@@ -219,8 +230,8 @@ namespace ArcOthelloAB
             sb.AppendFormat(MONOVALUE_FORMAT, "Enable", AIPlayer.ToString()).AppendLine();
             //  Time
             sb.AppendLine(TIME_HEADER);
-            sb.AppendFormat(MONOVALUE_FORMAT, WHITE, context.TimePlayedWhite.ToString(TIME_DIGITS_FORMAT)).AppendLine();
-            sb.AppendFormat(MONOVALUE_FORMAT, BLACK, context.TimePlayedBlack.ToString(TIME_DIGITS_FORMAT)).AppendLine();
+            sb.AppendFormat(MONOVALUE_FORMAT, WHITE, TimeHandlerContext.TimePlayedWhite.ToString(TIME_DIGITS_FORMAT)).AppendLine();
+            sb.AppendFormat(MONOVALUE_FORMAT, BLACK, TimeHandlerContext.TimePlayedBlack.ToString(TIME_DIGITS_FORMAT)).AppendLine();
             //  Game
             sb.AppendLine(GAME_HEADER);
             int[,] board = GetBoard();

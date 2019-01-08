@@ -4,11 +4,13 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 
 namespace ArcOthelloAB
 {
-    class TimeHandler : INotifyPropertyChanged
+    class TimeHandler : DispatcherTimer, INotifyPropertyChanged
     {
+        // Properties
         private int timePlayedBlack;    // Seconds
         public int TimePlayedBlack
         {
@@ -30,5 +32,62 @@ namespace ArcOthelloAB
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        private bool whiteTurn;
+        private readonly EventHandler WhiteEventHandler;
+        private readonly EventHandler BlackEventHandler;
+
+        public TimeHandler(int timePlayedWhite = 0, int timePlayedBlack = 0) : base()
+        {
+            TimePlayedWhite = timePlayedWhite;
+            TimePlayedBlack = timePlayedBlack;
+            Interval = new TimeSpan(0, 0, 1);
+            WhiteEventHandler = new EventHandler(dispatcherTimer_TickWhite);
+            BlackEventHandler = new EventHandler(dispatcherTimer_TickBlack);
+
+            whiteTurn = true;
+            Tick += WhiteEventHandler;
+        }
+
+        public new void Start()
+        {
+            base.Start();
+        }
+
+        // public void
+
+        public void Switch()
+        {
+            whiteTurn = !whiteTurn;
+            if (whiteTurn)
+            {
+                Tick += WhiteEventHandler;
+                Tick -= BlackEventHandler;
+            }
+            else
+            {
+                Tick += BlackEventHandler;
+                Tick -= WhiteEventHandler;
+            }
+        }
+
+        public bool IsWhitePlaying()
+        {
+            return whiteTurn;
+        }
+
+        public bool IsBlackPlaying()
+        {
+            return !whiteTurn;
+        }
+
+        private void dispatcherTimer_TickWhite(object sender, EventArgs e)
+        {
+            TimePlayedWhite++;
+        }
+
+        private void dispatcherTimer_TickBlack(object sender, EventArgs e)
+        {
+            TimePlayedBlack++;
+        }
     }
 }
