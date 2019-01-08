@@ -204,16 +204,16 @@ namespace ArcOthelloAB
             TimeHandlerContext.TimePlayedBlack = Convert.ToInt32(timeBlackLine.Substring(timeBlackPrefix.Length));
 
             // GAME
-            int i, j, pawnValue = 0;
+            int x, y, squareValue = 0;
             SquareStatus squareStatus;
             foreach (var item in lines.Skip(7))
             {
                 // Parse the line
-                i = Convert.ToInt32(item.Substring(1, 1));
-                j = Convert.ToInt32(item.Substring(3, 1));
-                pawnValue = Convert.ToInt32(item.Substring(6, 1));
+                x = Convert.ToInt32(item.Substring(1, 1));
+                y = Convert.ToInt32(item.Substring(3, 1));
+                squareValue = Convert.ToInt32(item.Substring(6, 1));
                 
-                switch(pawnValue)
+                switch(squareValue)
                 {
                     case 1:
                         squareStatus = SquareStatus.WhitePawn;
@@ -227,7 +227,7 @@ namespace ArcOthelloAB
                 }
 
                 // Assign the pawn value to the corresponding button
-                buttons[i, j].SetValue(CurrentStatus, squareStatus);
+                buttonHandler.SetButtonState(x, y, squareStatus);
             }
         }
 
