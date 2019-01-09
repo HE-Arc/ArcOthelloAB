@@ -5,7 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.IO;
+using System.Reflection;
 using System.Windows.Media;
+using System.Drawing;
+using System.Web;
+using System.Windows.Media.Imaging;
+using System.Windows.Resources;
 
 namespace ArcOthelloAB
 {
@@ -25,7 +31,7 @@ namespace ArcOthelloAB
             "currentStatus", typeof(SquareStatus),
             typeof(Othello)
             );
-
+        
         private UIElement[,] buttons;
         private Grid gameGrid;
 
@@ -52,6 +58,7 @@ namespace ArcOthelloAB
                 for (int j = 0; j < TOTAL_ROW; j++)
                 {
                     Button btn = new Button();
+
                     int btnX = i;
                     int btnY = j;
                     btn.Click += (sender, e) =>
@@ -107,22 +114,42 @@ namespace ArcOthelloAB
         private void setButtonState(UIElement button, SquareStatus newStatus)
         {
             button.SetValue(CurrentStatus, newStatus);
-            SolidColorBrush brush;
+            Bitmap bmp;
             switch (newStatus)
             {
                 case SquareStatus.NoPawn:
-                    brush = new SolidColorBrush(Colors.Gray);
+                    SolidColorBrush brush = new SolidColorBrush(Colors.White);
+                    button.GetType().GetProperty("Background").SetValue(button, brush);
                     break;
                 case SquareStatus.BlackPawn:
-                    brush = new SolidColorBrush(Colors.Black);
+                    SetButtonBackgroundImage(button, "Images/blackPawn.jpg");
                     break;
                 case SquareStatus.WhitePawn:
-                    brush = new SolidColorBrush(Colors.White);
+                    SetButtonBackgroundImage(button, "Images/whitePawn.jpg");
                     break;
                 default:
                     brush = new SolidColorBrush(Colors.Gray);
                     break;
             }
+        }
+
+        /// <summary>
+        /// Change the image of a given button
+        /// Code from:
+        /// https://stackoverflow.com/questions/15892290/how-to-change-set-background-image-of-a-button-in-c-sharp-wpf-code
+        /// 
+        /// <param name=button> button to be modified</param>
+        /// <param name=image> string of image path ex: "Images/blackPawn.jpg"</param>
+        /// </summary>
+        private void SetButtonBackgroundImage(UIElement button, String image)
+        {
+            Uri resourceUri = new Uri(image, UriKind.Relative);
+            StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
+
+            BitmapFrame bitmap = BitmapFrame.Create(streamInfo.Stream);
+            var brush = new ImageBrush();
+            brush.ImageSource = bitmap;
+
             button.GetType().GetProperty("Background").SetValue(button, brush);
         }
 
@@ -146,9 +173,16 @@ namespace ArcOthelloAB
                     isPlayable = true;
             }
             if (isPlayable)
+            {
                 buttons[x, y].SetValue(IsAvailableProperty, true);
+                SetButtonBackgroundImage(buttons[x, y], "Images/playableSquare.jpg");
+            }
             else
+            {
                 buttons[x, y].SetValue(IsAvailableProperty, false);
+                SolidColorBrush brush = new SolidColorBrush(Colors.White);
+                buttons[x, y].GetType().GetProperty("Background").SetValue(buttons[x, y], brush);
+            }
         }
 
 
