@@ -30,11 +30,14 @@ namespace ArcOthelloAB
         private static int TOTAL_ROW = 7;
         private static int TOTAL_COLLUMN = 9;
 
-        public SquareStatus status { get; set; }
-
+        // AI properties
         private bool AIPlayer;
 
+        // Timer properties
         private TimeHandler TimeHandlerContext;
+
+        // Score properties
+        // TODO Score implementation
 
         // Files properties
         private static string FILE_FORMAT = "Text file (*.txt)|*.txt";
@@ -55,21 +58,24 @@ namespace ArcOthelloAB
         /// <param name="parent">parent Window</param>
         public Othello(Window parent, bool aiPlayer = false)
         {
+
             this.parent = parent;
             InitializeComponent();
 
+            // Generate the board
             buttons = new UIElement[TOTAL_COLLUMN, TOTAL_ROW];
             buttonHandler = new ButtonHandler(this.GameGrid, buttons);
 
+            // Timer
             TimeHandlerContext = new TimeHandler();
-
             DataContext = TimeHandlerContext;
             TimeHandlerContext.Start();
 
+            // Active (or not) the AI
             if (aiPlayer)
             {
                 AIPlayer = aiPlayer;
-                // start the AI
+                // TODO start the AI
             }
         }
 
@@ -83,7 +89,12 @@ namespace ArcOthelloAB
             try
             {
                 LoadFromFile(filePath);
-                // if the file registered an AI, start it
+
+                // Active (or not) the AI
+                if (AIPlayer)
+                {
+                    // TODO start the AI
+                }
             }
             catch (Exception ex)
             {
@@ -92,6 +103,11 @@ namespace ArcOthelloAB
             }
         }
 
+        /// <summary>
+        /// Open the settings window
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnSettings_Click(object sender, RoutedEventArgs e)
         {
             // TODO show new window
@@ -106,9 +122,16 @@ namespace ArcOthelloAB
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Saving the current game action
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnSave_Click(Object sender, RoutedEventArgs e)
         {
             TimeHandlerContext.Stop();
+            
+            // Configure the file format
             string filePath = string.Empty;
             SaveFileDialog saveFileDialog = new SaveFileDialog()
             {
@@ -116,10 +139,11 @@ namespace ArcOthelloAB
                 Filter = FILE_FORMAT,
                 FileName = GenerateGameFileName(),
             };
+
+            // User select where to register its game file
             if(saveFileDialog.ShowDialog() == true)
             {
                 filePath = saveFileDialog.FileName;
-                MessageBox.Show(this, "Path : " + filePath);
 
                 try
                 {
@@ -132,25 +156,33 @@ namespace ArcOthelloAB
             }
             else
             {
+                // Continue the current game
                 TimeHandlerContext.Start();
             }
         }
 
+        /// <summary>
+        /// Loading a file action
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnLoad_Click(object sender, RoutedEventArgs e)
         {
             TimeHandlerContext.Stop();
+
+            // Configure file formate
             string filePath = string.Empty;
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
                 InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Personal),
                 Filter = FILE_FORMAT,
             };
+
+            // User select a file
             if (openFileDialog.ShowDialog() == true)
             {
                 //Get the path of specified file
                 filePath = openFileDialog.FileName;
-
-                MessageBox.Show(this, "Path : " + filePath);
                 
                 try
                 {
@@ -164,16 +196,27 @@ namespace ArcOthelloAB
             }
             else
             {
+                // Continue the current game
                 TimeHandlerContext.Start();
             }
         }
 
+        /// <summary>
+        /// Window back button action, clossing the event
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BtnBack_Click(object sender, RoutedEventArgs e)
         {
+            // TODO ask user if he wants to save the game
             parent.Show();
             this.Close();
         }
-
+        /// <summary>
+        /// Window closing action
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             parent.Show();
@@ -190,11 +233,52 @@ namespace ArcOthelloAB
             if (!ValidateFile(lines))
                 throw new Exception("Invalid File");
 
-            // TODO Parse file
-            // TimeHandlerContext.TimePlayedWhite = xxxxx;
-            // TimeHandlerContext.TimePlayedBlack = xxxxx;
+            // AI
+            string aiLine = lines[2];
+            string aiPrefix = String.Format(MONOVALUE_FORMAT, "Enable", "");
+            AIPlayer = Convert.ToBoolean(aiLine.Substring(aiPrefix.Length));
+
+            // Time
+            string timeWhiteLine = lines[4];
+            string timeWhitePrefix = string.Format(MONOVALUE_FORMAT, WHITE, "");
+            TimeHandlerContext.TimePlayedWhite = Convert.ToInt32(timeWhiteLine.Substring(timeWhitePrefix.Length));
+            string timeBlackLine = lines[5];
+            string timeBlackPrefix = string.Format(MONOVALUE_FORMAT, BLACK, "");
+            TimeHandlerContext.TimePlayedBlack = Convert.ToInt32(timeBlackLine.Substring(timeBlackPrefix.Length));
+
+            // GAME
+            int x, y, squareValue = 0;
+            SquareStatus squareStatus;
+            foreach (var item in lines.Skip(7))
+            {
+                // Parse the line
+                x = Convert.ToInt32(item.Substring(1, 1));
+                y = Convert.ToInt32(item.Substring(3, 1));
+                squareValue = Convert.ToInt32(item.Substring(6, 1));
+                
+                switch(squareValue)
+                {
+                    case 1:
+                        squareStatus = SquareStatus.WhitePawn;
+                        break;
+                    case 2:
+                        squareStatus = SquareStatus.BlackPawn;
+                        break;
+                    default:
+                        squareStatus = SquareStatus.NoPawn;
+                        break;
+                }
+
+                // Assign the pawn value to the corresponding button
+                buttonHandler.SetButtonState(x, y, squareStatus);
+            }
         }
 
+        /// <summary>
+        /// Validate a game file content
+        /// </summary>
+        /// <param name="content">file content as a string tab</param>
+        /// <returns>if the file is valide or not</returns>
         private static bool ValidateFile(string[] content)
         {
             if (content.Length != 70)
@@ -256,10 +340,14 @@ namespace ArcOthelloAB
             return buttonHandler.GetScore(pawnStatus);
         }
 
-        ///
-        /// IPlayable functions
-        ///
+        /*
+            IPlayable functions
+        */
 
+        /// <summary>
+        /// Get the game board as a two dimensional int array
+        /// </summary>
+        /// <returns>the game board as a two dimensional int array</returns>
         public int[,] GetBoard()
         {
             int[,] intBoard = new int[TOTAL_COLLUMN, TOTAL_ROW];
@@ -285,31 +373,66 @@ namespace ArcOthelloAB
             return intBoard;
         }
 
+        /// <summary>
+        /// Get the name of the game
+        /// </summary>
+        /// <returns>The name of the game</returns>
         public string GetName()
         {
             return NAME;
         }
 
+        /// <summary>
+        /// Give the best next move for the AI to play considering the board game,
+        /// the depth of search in the tree of possibles moves and which color of
+        /// pawn the AI owns 
+        /// </summary>
+        /// <param name="game">Game board</param>
+        /// <param name="level">Depth of search for the algorithm</param>
+        /// <param name="whiteTurn">True if the pawns are white, False if the pawns are black</param>
+        /// <returns></returns>
         public Tuple<int, int> GetNextMove(int[,] game, int level, bool whiteTurn)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Give the score of the white pawns owner
+        /// </summary>
+        /// <returns>score of the white pawns owner</returns>
         public int GetWhiteScore()
         {
             return GetScore(SquareStatus.WhitePawn);
         }
 
+        /// <summary>
+        /// Give the score of the black pawns owner
+        /// </summary>
+        /// <returns>score of the black pawns owner</returns>
         public int GetBlackScore()
         {
             return GetScore(SquareStatus.BlackPawn);
         }
 
+        /// <summary>
+        /// Indicate if the square at the given coordonate is playable or not considering the pawn color
+        /// </summary>
+        /// <param name="column">column of the square</param>
+        /// <param name="line">line of the square</param>
+        /// <param name="isWhite">True if the pawn color is white, False if the pawn color is black</param>
+        /// <returns>if the move is valid or not</returns>
         public bool IsPlayable(int column, int line, bool isWhite)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Place a pawn in the square at the given coordonate and return if the move is accepted or not
+        /// </summary>
+        /// <param name="column">column of the square</param>
+        /// <param name="line">line of the square</param>
+        /// <param name="isWhite">True if the pawn color is white, False if the pawn color is black</param>
+        /// <returns>if the move is accepted or not</returns>
         public bool PlayMove(int column, int line, bool isWhite)
         {
             throw new NotImplementedException();

@@ -153,6 +153,17 @@ namespace ArcOthelloAB
             button.GetType().GetProperty("Background").SetValue(button, brush);
         }
 
+        /// <summary>
+        /// Change the state of a square
+        /// </summary>
+        /// <param name="x">x coordonate</param>
+        /// <param name="y">y coordonate</param>
+        /// <param name="newStatus">new SquareStatus of the square</param>
+        public void SetButtonState(int x, int y, SquareStatus newStatus)
+        {
+            setButtonState(buttons[x, y], newStatus);
+        }
+
         /*
          * Coordonate of square to check ar given as argument
          * 
