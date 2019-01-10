@@ -214,6 +214,7 @@ namespace ArcOthelloAB
             parent.Show();
             this.Close();
         }
+
         /// <summary>
         /// Window closing action
         /// </summary>

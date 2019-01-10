@@ -59,8 +59,6 @@ namespace ArcOthelloAB
 
         private void setupButtons()
         {
-            //buttons = new UIElement[TOTAL_COLLUMN, TOTAL_ROW];
-
             for (int i = 0; i < TOTAL_COLLUMN; i++)
             {
                 for (int j = 0; j < TOTAL_ROW; j++)
@@ -77,15 +75,12 @@ namespace ArcOthelloAB
                     Grid.SetRow(btn, j); // search the btn contained in a grid and setup a row position
                     Grid.SetColumn(btn, i); // setup a column
 
-                    buttons[btnX, btnY] = GetButton(btnX, btnY);
-                }
-            }
+                    buttons[btnX, btnY] = btn;
 
-            // initiate property of each button
-            foreach (Button child in gameGrid.Children.OfType<Button>())
-            {
-                child.SetValue(IsAvailableProperty, false);
-                setButtonState(child, SquareStatus.NoPawn); // Add corresponding style
+                    // initiate property of each button
+                    btn.SetValue(IsAvailableProperty, false);
+                    setButtonState(btn, SquareStatus.NoPawn); // Add corresponding style
+                }
             }
 
             // setup initial board
@@ -103,9 +98,13 @@ namespace ArcOthelloAB
                 }
             }
         }
-        /*
-         * get an UIElement of the board grid according to it's row and column
-         */
+
+        /// <summary>
+        /// Get an UIElement of the board grid according to it's row and column
+        /// </summary>
+        /// <param name="column">column indice</param>
+        /// <param name="row">row indice</param>
+        /// <returns>UIElement of the specified column and row</returns>
         private UIElement GetButton(int column, int row)
         {
             Grid grid = gameGrid;
@@ -132,7 +131,7 @@ namespace ArcOthelloAB
         {
             Button button = (Button)buttons[x, y];
             
-            if((bool)button.GetValue(IsAvailableProperty))
+            if((bool)button.GetValue(IsAvailableProperty) && (SquareStatus)button.GetValue(CurrentStatus) == SquareStatus.NoPawn)
             {
                 setButtonState(button, currentPlayer);
 
@@ -178,6 +177,10 @@ namespace ArcOthelloAB
             UpdateButtonStyle(button);
         }
 
+        /// <summary>
+        /// Updating button style considering its square status
+        /// </summary>
+        /// <param name="button">Button of the board game</param>
         private void UpdateButtonStyle(Button button)
         {
             SquareStatus status = (SquareStatus)button.GetValue(CurrentStatus);
@@ -193,31 +196,16 @@ namespace ArcOthelloAB
                 default:
                     bool avaibleProperty = Convert.ToBoolean(button.GetValue(IsAvailableProperty));
                     if (avaibleProperty)
-                        button.Style = (Style)Application.Current.FindResource("Playable");
+                    {
+                        if (currentPlayer == SquareStatus.WhitePawn)
+                            button.Style = (Style)Application.Current.FindResource("PlayableWhite");
+                        else
+                            button.Style = (Style)Application.Current.FindResource("PlayableBlack");
+                    }
                     else
                         button.Style = (Style)Application.Current.FindResource("NoPawn");
                     break;
             }
-        }
-
-        /// <summary>
-        /// Change the image of a given button
-        /// Code from:
-        /// https://stackoverflow.com/questions/15892290/how-to-change-set-background-image-of-a-button-in-c-sharp-wpf-code
-        /// 
-        /// <param name=button> button to be modified</param>
-        /// <param name=image> string of image path ex: "Images/blackPawn.jpg"</param>
-        /// </summary>
-        private void SetButtonBackgroundImage(UIElement button, String image)
-        {
-            Uri resourceUri = new Uri(image, UriKind.Relative);
-            StreamResourceInfo streamInfo = Application.GetResourceStream(resourceUri);
-
-            BitmapFrame bitmap = BitmapFrame.Create(streamInfo.Stream);
-            var brush = new ImageBrush();
-            brush.ImageSource = bitmap;
-
-            button.GetType().GetProperty("Background").SetValue(button, brush);
         }
 
         /// <summary>
@@ -254,8 +242,6 @@ namespace ArcOthelloAB
             button.SetValue(IsAvailableProperty, isPlayable);
             UpdateButtonStyle(button);
         }
-
-
 
         /**
          * Will check in a given direction if the a pawn can be placed on the current empty square
@@ -368,6 +354,4 @@ namespace ArcOthelloAB
             return (SquareStatus)buttons[x, y].GetValue(CurrentStatus);
         }
     }
-
-
 }

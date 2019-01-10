@@ -2,19 +2,86 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:ArcOthelloAB">
     <Style x:Key="NoPawn"
-               TargetType="Button">
+           TargetType="Button">
         <Setter Property="Background" Value="Silver"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border Background="{TemplateBinding Background}" BorderBrush="Black" BorderThickness="1">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <!-- change other properties-->
+                <Setter Property="Background" Value="Turquoise"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style x:Key="Pawn"
+           TargetType="Button">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border Background="{TemplateBinding Background}" BorderBrush="Black" BorderThickness="1">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
     <Style x:Key="WhitePawn"
-               TargetType="Button">
+           TargetType="Button"
+           BasedOn="{StaticResource Pawn}">
         <Setter Property="Background" Value="White"/>
     </Style>
     <Style x:Key="BlackPawn"
-               TargetType="Button">
+           TargetType="Button"
+           BasedOn="{StaticResource Pawn}">
         <Setter Property="Background" Value="Black"/>
     </Style>
     <Style x:Key="Playable"
-               TargetType="Button">
+           TargetType="Button">
         <Setter Property="Background" Value="Red"/>
+    </Style>
+    <Style x:Key="PlayableBlack"
+           TargetType="Button"
+           BasedOn="{StaticResource Playable}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border Background="{TemplateBinding Background}" BorderBrush="Black" BorderThickness="1">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <!-- change other properties-->
+                <Setter Property="Background" Value="Blue"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <Style x:Key="PlayableWhite"
+           TargetType="Button"
+           BasedOn="{StaticResource Playable}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border Background="{TemplateBinding Background}" BorderBrush="Black" BorderThickness="1">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <!-- change other properties-->
+                <Setter Property="Background" Value="Green"/>
+            </Trigger>
+        </Style.Triggers>
     </Style>
 </ResourceDictionary>
