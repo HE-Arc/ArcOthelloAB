@@ -4,6 +4,25 @@
              xmlns:local="clr-namespace:ArcOthelloAB"
              StartupUri="Home.xaml">
     <Application.Resources>
-         
+        <!--
+            Definir dictionnaire de ressources !
+            <ResourceDictionary Source="MyResourceDictionary.xaml" />
+        -->
+        <Style x:Key="NoPawn"
+               TargetType="Button">
+            <Setter Property="Background" Value="Silver"/>
+        </Style>
+        <Style x:Key="WhitePawn"
+               TargetType="Button">
+            <Setter Property="Background" Value="White"/>
+        </Style>
+        <Style x:Key="BlackPawn"
+               TargetType="Button">
+            <Setter Property="Background" Value="Black"/>
+        </Style>
+        <Style x:Key="Playable"
+               TargetType="Button">
+            <Setter Property="Background" Value="Red"/>
+        </Style>
     </Application.Resources>
 </Application>

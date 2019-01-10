@@ -36,19 +36,23 @@ namespace ArcOthelloAB
         private Grid gameGrid;
 
         // Game Properties
-        private int TOTAL_ROW;
-        private int TOTAL_COLLUMN;
+        private readonly int TOTAL_ROW;
+        private readonly int TOTAL_COLLUMN;
 
         private SquareStatus currentPlayer;
+        private readonly TimeHandler timeHandler;
+        private readonly Window parent;
 
-        public ButtonHandler(Grid gameGrid, UIElement[,] buttons, int TOTAL_ROW = 7, int TOTAL_COLLUMN = 9)
+        public ButtonHandler(Window parent, Grid gameGrid, UIElement[,] buttons, TimeHandler timeHandler, int TOTAL_ROW = 7, int TOTAL_COLLUMN = 9)
         {
+            this.parent = parent;
             this.gameGrid = gameGrid;
             this.buttons = buttons;
+            this.timeHandler = timeHandler;
             this.TOTAL_ROW = TOTAL_ROW;
             this.TOTAL_COLLUMN = TOTAL_COLLUMN;
 
-            currentPlayer = SquareStatus.BlackPawn;
+            currentPlayer = SquareStatus.WhitePawn; // White Pawn starts by default
 
             setupButtons();
         }
@@ -78,17 +82,17 @@ namespace ArcOthelloAB
             }
 
             // initiate property of each button
-            foreach (UIElement child in gameGrid.Children)
+            foreach (Button child in gameGrid.Children.OfType<Button>())
             {
                 child.SetValue(IsAvailableProperty, false);
-                setButtonState(child, SquareStatus.NoPawn);
+                setButtonState(child, SquareStatus.NoPawn); // Add corresponding style
             }
 
             // setup initial board
-            setButtonState(buttons[3, 3], SquareStatus.WhitePawn);
-            setButtonState(buttons[4, 3], SquareStatus.BlackPawn);
-            setButtonState(buttons[3, 4], SquareStatus.BlackPawn);
-            setButtonState(buttons[4, 4], SquareStatus.WhitePawn);
+            setButtonState((Button)buttons[3, 3], SquareStatus.WhitePawn);
+            setButtonState((Button)buttons[4, 3], SquareStatus.BlackPawn);
+            setButtonState((Button)buttons[3, 4], SquareStatus.BlackPawn);
+            setButtonState((Button)buttons[4, 4], SquareStatus.WhitePawn);
 
             for (int i = 0; i < TOTAL_COLLUMN; i++)
             {
@@ -126,7 +130,7 @@ namespace ArcOthelloAB
         /// </summary>
         private void buttonAction(int x, int y)
         {
-            UIElement button = buttons[x, y];
+            Button button = (Button)buttons[x, y];
             
             if((bool)button.GetValue(IsAvailableProperty))
             {
@@ -156,6 +160,9 @@ namespace ArcOthelloAB
                             UpdateButtonAvailability(i, j, currentPlayer);
                     }
                 }
+
+                // Change player timer
+                timeHandler.Switch();
             }
         }
 
@@ -165,24 +172,30 @@ namespace ArcOthelloAB
         /// <param name=button> button to be modified</param>
         /// <param name=newStatus> new status of the button</param>
         /// </summary>
-        private void setButtonState(UIElement button, SquareStatus newStatus)
+        private void setButtonState(Button button, SquareStatus newStatus)
         {
             button.SetValue(CurrentStatus, newStatus);
-            Bitmap bmp;
-            switch (newStatus)
+            UpdateButtonStyle(button);
+        }
+
+        private void UpdateButtonStyle(Button button)
+        {
+            SquareStatus status = (SquareStatus)button.GetValue(CurrentStatus);
+            switch (status)
             {
-                case SquareStatus.NoPawn:
-                    SolidColorBrush brush = new SolidColorBrush(Colors.White);
-                    button.GetType().GetProperty("Background").SetValue(button, brush);
-                    break;
                 case SquareStatus.BlackPawn:
-                    SetButtonBackgroundImage(button, "Images/blackPawn.jpg");
+                    button.Style = (Style)(parent.Resources["BlackPawn"]);
                     break;
                 case SquareStatus.WhitePawn:
-                    SetButtonBackgroundImage(button, "Images/whitePawn.jpg");
+                    button.Style = (Style)(parent.Resources["WhitePawn"]);
                     break;
+                case SquareStatus.NoPawn:   // Same style for both
                 default:
-                    brush = new SolidColorBrush(Colors.Gray);
+                    bool avaibleProperty = Convert.ToBoolean(button.GetValue(IsAvailableProperty));
+                    if (avaibleProperty)
+                        button.Style = (Style)(parent.Resources["Playable"]);
+                    else
+                        button.Style = (Style)(parent.Resources["NoPawn"]);
                     break;
             }
         }
@@ -215,7 +228,7 @@ namespace ArcOthelloAB
         /// <param name="newStatus">new SquareStatus of the square</param>
         public void SetButtonState(int x, int y, SquareStatus newStatus)
         {
-            setButtonState(buttons[x, y], newStatus);
+            setButtonState((Button) buttons[x, y], newStatus);
         }
 
         /*
@@ -237,17 +250,9 @@ namespace ArcOthelloAB
                 if (CheckOtherPawnFromDirection(dirX, dirY, x, y, currentPlayer))
                     isPlayable = true;
             }
-            if (isPlayable)
-            {
-                buttons[x, y].SetValue(IsAvailableProperty, true);
-                SetButtonBackgroundImage(buttons[x, y], "Images/playableSquare.jpg");
-            }
-            else
-            {
-                buttons[x, y].SetValue(IsAvailableProperty, false);
-                SolidColorBrush brush = new SolidColorBrush(Colors.White);
-                buttons[x, y].GetType().GetProperty("Background").SetValue(buttons[x, y], brush);
-            }
+            Button button = (Button) buttons[x, y];
+            button.SetValue(IsAvailableProperty, isPlayable);
+            UpdateButtonStyle(button);
         }
 
 
@@ -324,7 +329,7 @@ namespace ArcOthelloAB
             else
                 opponentStatus = SquareStatus.BlackPawn;
 
-            UIElement currentButton = buttons[x, y];
+            Button currentButton = (Button) buttons[x, y];
             SquareStatus nextPawnStatus = (SquareStatus)currentButton.GetValue(CurrentStatus);
 
             while (nextPawnStatus == opponentStatus)
@@ -332,7 +337,7 @@ namespace ArcOthelloAB
                 setButtonState(currentButton, currentStatus);
                 x += dirX;
                 y += dirY;
-                currentButton = buttons[x, y];
+                currentButton = (Button) buttons[x, y];
                 nextPawnStatus = (SquareStatus)currentButton.GetValue(CurrentStatus);
             }
         }

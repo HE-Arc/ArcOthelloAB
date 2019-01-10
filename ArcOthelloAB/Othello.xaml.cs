@@ -62,14 +62,13 @@ namespace ArcOthelloAB
             this.parent = parent;
             InitializeComponent();
 
-            // Generate the board
-            buttons = new UIElement[TOTAL_COLLUMN, TOTAL_ROW];
-            buttonHandler = new ButtonHandler(this.GameGrid, buttons);
-
             // Timer
             TimeHandlerContext = new TimeHandler();
             DataContext = TimeHandlerContext;
-            TimeHandlerContext.Start();
+
+            // Generate the board
+            buttons = new Button[TOTAL_COLLUMN, TOTAL_ROW];
+            buttonHandler = new ButtonHandler(this, this.GameGrid, buttons, TimeHandlerContext);
 
             // Active (or not) the AI
             if (aiPlayer)
@@ -77,6 +76,9 @@ namespace ArcOthelloAB
                 AIPlayer = aiPlayer;
                 // TODO start the AI
             }
+
+            //Start the timer
+            TimeHandlerContext.Start();
         }
 
         /// <summary>
