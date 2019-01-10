@@ -62,6 +62,10 @@
     <Compile Include="ButtonHandler.cs" />
     <Compile Include="EnumSquareStatus.cs" />
     <Compile Include="TimeHandler.cs" />
+    <Page Include="Ressources\DictionaryOthello.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Home.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

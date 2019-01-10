@@ -1,0 +1,20 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:ArcOthelloAB">
+    <Style x:Key="NoPawn"
+               TargetType="Button">
+        <Setter Property="Background" Value="Silver"/>
+    </Style>
+    <Style x:Key="WhitePawn"
+               TargetType="Button">
+        <Setter Property="Background" Value="White"/>
+    </Style>
+    <Style x:Key="BlackPawn"
+               TargetType="Button">
+        <Setter Property="Background" Value="Black"/>
+    </Style>
+    <Style x:Key="Playable"
+               TargetType="Button">
+        <Setter Property="Background" Value="Red"/>
+    </Style>
+</ResourceDictionary>
