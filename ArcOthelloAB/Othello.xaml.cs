@@ -417,7 +417,7 @@ namespace ArcOthelloAB
         /// <returns>if the move is valid or not</returns>
         public bool IsPlayable(int column, int line, bool isWhite)
         {
-            throw new NotImplementedException();
+            return buttonHandler.getPlayability(column, line);
         }
 
         /// <summary>
@@ -429,7 +429,12 @@ namespace ArcOthelloAB
         /// <returns>if the move is accepted or not</returns>
         public bool PlayMove(int column, int line, bool isWhite)
         {
-            throw new NotImplementedException();
+            SquareStatus currentPlayer;
+            if (isWhite)
+                currentPlayer = SquareStatus.WhitePawn;
+            else
+                currentPlayer = SquareStatus.BlackPawn;
+            return buttonHandler.buttonAction(column, line, currentPlayer);
         }
     }
 }
