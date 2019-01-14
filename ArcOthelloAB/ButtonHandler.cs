@@ -176,10 +176,10 @@ namespace ArcOthelloAB
             switch (status)
             {
                 case SquareStatus.BlackPawn:
-                    button.Style = (Style) Application.Current.FindResource("BlackPawn");
+                    button.Style = (Style) Application.Current.FindResource("BlackPawnSquare");
                     break;
                 case SquareStatus.WhitePawn:
-                    button.Style = (Style)Application.Current.FindResource("WhitePawn");
+                    button.Style = (Style)Application.Current.FindResource("WhitePawnSquare");
                     break;
                 case SquareStatus.NoPawn:   // Same style for both
                 default:
@@ -187,9 +187,9 @@ namespace ArcOthelloAB
                     if (avaibleProperty)
                     {
                         if (currentPlayer == SquareStatus.WhitePawn)
-                            button.Style = (Style)Application.Current.FindResource("PlayableWhite");
+                            button.Style = (Style)Application.Current.FindResource("PlayableWhiteSquare");
                         else
-                            button.Style = (Style)Application.Current.FindResource("PlayableBlack");
+                            button.Style = (Style)Application.Current.FindResource("PlayableBlackSquare");
                     }
                     else
                         button.Style = (Style)Application.Current.FindResource("NoPawn");
