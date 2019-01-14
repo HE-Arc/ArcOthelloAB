@@ -28,7 +28,7 @@ namespace ArcOthelloAB
         private readonly int TOTAL_ROW;
         private readonly int TOTAL_COLLUMN;
 
-        private SquareStatus currentPlayer;
+        public SquareStatus currentPlayer;
         private readonly TimeHandler timeHandler;
         private readonly Window parent;
 
@@ -219,6 +219,25 @@ namespace ArcOthelloAB
         public void SetButtonState(int x, int y, SquareStatus newStatus)
         {
             setButtonState((Button) buttons[x, y], newStatus);
+        }
+
+        public void UpdateAllButtonAvailability(bool player)
+        {
+            if (player)
+                currentPlayer = SquareStatus.WhitePawn;
+            else
+                currentPlayer = SquareStatus.BlackPawn;
+
+            for (int i = 0; i < TOTAL_COLLUMN; i++)
+            {
+                for (int j = 0; j < TOTAL_ROW; j++)
+                {
+                    if ((SquareStatus)buttons[i, j].GetValue(CurrentStatus) == SquareStatus.NoPawn)
+                        UpdateButtonAvailability(i, j, currentPlayer);
+                    else
+                        buttons[i, j].SetValue(IsAvailableProperty, false);
+                }
+            }
         }
 
         /// <summary>

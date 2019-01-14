@@ -35,6 +35,7 @@ namespace ArcOthelloAB
         private static string DATETIME_FORMAT = "yyyy-MM-dd_HH-mm-ss";
         private static string NAME = "ArcOthelloAB";
         private static string AI_HEADER = "--AI--";
+        private static string PLAYER_HEADER = "--CurrentPlayer--";
         private static string TIME_HEADER = "--Time--";
         private static string GAME_HEADER = "--Game--";
         private static string WHITE = "w";
@@ -232,18 +233,24 @@ namespace ArcOthelloAB
             string aiPrefix = String.Format(MONOVALUE_FORMAT, "Enable", "");
             AIPlayer = Convert.ToBoolean(aiLine.Substring(aiPrefix.Length));
 
+            // Current player
+            bool iswhitePlayer;
+            string playerLine = lines[4];
+            string playerPrefix = String.Format(MONOVALUE_FORMAT, "IsWhite", "");
+            iswhitePlayer = Convert.ToBoolean(playerLine.Substring(playerPrefix.Length));
+
             // Time
-            string timeWhiteLine = lines[4];
+            string timeWhiteLine = lines[6];
             string timeWhitePrefix = string.Format(MONOVALUE_FORMAT, WHITE, "");
             TimeHandlerContext.TimePlayedWhite = Convert.ToInt32(timeWhiteLine.Substring(timeWhitePrefix.Length));
-            string timeBlackLine = lines[5];
+            string timeBlackLine = lines[7];
             string timeBlackPrefix = string.Format(MONOVALUE_FORMAT, BLACK, "");
             TimeHandlerContext.TimePlayedBlack = Convert.ToInt32(timeBlackLine.Substring(timeBlackPrefix.Length));
 
             // GAME
             int x, y, squareValue = 0;
             SquareStatus squareStatus;
-            foreach (var item in lines.Skip(7))
+            foreach (var item in lines.Skip(9))
             {
                 // Parse the line
                 x = Convert.ToInt32(item.Substring(1, 1));
@@ -266,6 +273,7 @@ namespace ArcOthelloAB
                 // Assign the pawn value to the corresponding button
                 buttonHandler.SetButtonState(x, y, squareStatus);
             }
+            buttonHandler.UpdateAllButtonAvailability(iswhitePlayer);
         }
 
         /// <summary>
@@ -275,15 +283,17 @@ namespace ArcOthelloAB
         /// <returns>if the file is valide or not</returns>
         private static bool ValidateFile(string[] content)
         {
-            if (content.Length != 70)
+            if (content.Length != 72)
                 return false;
             if (!String.Equals(content[0], NAME))
                 return false;
             if (!String.Equals(content[1], AI_HEADER))
                 return false;
-            if (!String.Equals(content[3], TIME_HEADER))
+            if (!String.Equals(content[3], PLAYER_HEADER))
                 return false;
-            if (!String.Equals(content[6], GAME_HEADER))
+            if (!String.Equals(content[5], TIME_HEADER))
+                return false;
+            if (!String.Equals(content[8], GAME_HEADER))
                 return false;
 
             // TODO Imporove validation
@@ -306,6 +316,14 @@ namespace ArcOthelloAB
             //  AI
             sb.AppendLine(AI_HEADER);
             sb.AppendFormat(MONOVALUE_FORMAT, "Enable", AIPlayer.ToString()).AppendLine();
+            //  Current PLayer
+            sb.AppendLine(PLAYER_HEADER);
+            bool isWhitePlayer;
+            if (buttonHandler.currentPlayer == SquareStatus.WhitePawn)
+                isWhitePlayer = true;
+            else
+                isWhitePlayer = false;
+            sb.AppendFormat(MONOVALUE_FORMAT, "IsWhite", isWhitePlayer.ToString()).AppendLine();
             //  Time
             sb.AppendLine(TIME_HEADER);
             sb.AppendFormat(MONOVALUE_FORMAT, WHITE, TimeHandlerContext.TimePlayedWhite.ToString(TIME_DIGITS_FORMAT)).AppendLine();
