@@ -28,7 +28,7 @@ namespace ArcOthelloAB
         private readonly int TOTAL_ROW;
         private readonly int TOTAL_COLLUMN;
 
-        private SquareStatus currentPlayer;
+        public SquareStatus currentPlayer;
         private readonly TimeHandler timeHandler;
         private readonly Window parent;
 
@@ -112,17 +112,19 @@ namespace ArcOthelloAB
         /// 
         /// Will place a pawn of current player in the button
         /// will then modify surrounding pawn according to othelo rules
-        /// 
+        /// </summary>
         /// <param name=x> x coordonate of button</param>
         /// <param name=y> y coordonate of button</param>
-        /// </summary>
-        private void buttonAction(int x, int y)
+        public bool buttonAction(int x, int y, SquareStatus player = SquareStatus.NoPawn)
         {
+            if (player == SquareStatus.NoPawn)
+                player = currentPlayer;
+
             Button button = (Button)buttons[x, y];
             
             if((bool)button.GetValue(IsAvailableProperty) && (SquareStatus)button.GetValue(CurrentStatus) == SquareStatus.NoPawn)
             {
-                setButtonState(button, currentPlayer);
+                setButtonState(button, player);
 
                 int[,] directionToCheck = { { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, -1 }, { 0, 1 }, { 1, -1 }, { 1, 0 }, { 1, 1 } };
 
@@ -130,36 +132,47 @@ namespace ArcOthelloAB
                 {
                     int dirX = directionToCheck[i, 0];
                     int dirY = directionToCheck[i, 1];
-                    if (CheckOtherPawnFromDirection(dirX, dirY, x, y, currentPlayer))
-                        setOtherPawnFromDirection(dirX, dirY, x, y, currentPlayer);
+                    if (CheckOtherPawnFromDirection(dirX, dirY, x, y, player))
+                        setOtherPawnFromDirection(dirX, dirY, x, y, player);
                 }
 
+                changePlayer();// change the current player and update button
 
-                if (currentPlayer == SquareStatus.BlackPawn)
-                    currentPlayer = SquareStatus.WhitePawn;
-                else
-                    currentPlayer = SquareStatus.BlackPawn;
-
-                for (int i = 0; i < TOTAL_COLLUMN; i++)
-                {
-                    for (int j = 0; j < TOTAL_ROW; j++)
-                    {
-                        if ((SquareStatus)buttons[i, j].GetValue(CurrentStatus) == SquareStatus.NoPawn)
-                            UpdateButtonAvailability(i, j, currentPlayer);
-                    }
-                }
-
-                // Change player timer
-                timeHandler.Switch();
+                if (!checkButtonsAvailability()) // if the player can't play anywhere, change player again
+                    changePlayer();
             }
+            return true;
+        }
+
+        /// <summary>
+        /// Give the other player the right to play
+        /// Update buttons playability accordingly
+        /// </summary>
+        private void changePlayer()
+        {
+            if (currentPlayer == SquareStatus.BlackPawn)
+                currentPlayer = SquareStatus.WhitePawn;
+            else
+                currentPlayer = SquareStatus.BlackPawn;
+
+            for (int i = 0; i < TOTAL_COLLUMN; i++)
+            {
+                for (int j = 0; j < TOTAL_ROW; j++)
+                {
+                    if ((SquareStatus)buttons[i, j].GetValue(CurrentStatus) == SquareStatus.NoPawn)
+                        UpdateButtonAvailability(i, j, currentPlayer);
+                }
+            }
+
+            // Change player timer
+            timeHandler.Switch();
         }
 
         /// <summary>
         /// Set the state of a button and change it's image accordingly
-        /// 
+        /// </summary>
         /// <param name=button> button to be modified</param>
         /// <param name=newStatus> new status of the button</param>
-        /// </summary>
         private void setButtonState(Button button, SquareStatus newStatus)
         {
             button.SetValue(CurrentStatus, newStatus);
@@ -208,12 +221,32 @@ namespace ArcOthelloAB
             setButtonState((Button) buttons[x, y], newStatus);
         }
 
-        /*
-         * Coordonate of square to check ar given as argument
-         * 
-         * Will check in every direction to see if this square is playable
-         * Will then update his status according to the result of the search
-         */
+        public void UpdateAllButtonAvailability(bool player)
+        {
+            if (player)
+                currentPlayer = SquareStatus.WhitePawn;
+            else
+                currentPlayer = SquareStatus.BlackPawn;
+
+            for (int i = 0; i < TOTAL_COLLUMN; i++)
+            {
+                for (int j = 0; j < TOTAL_ROW; j++)
+                {
+                    if ((SquareStatus)buttons[i, j].GetValue(CurrentStatus) == SquareStatus.NoPawn)
+                        UpdateButtonAvailability(i, j, currentPlayer);
+                    else
+                        buttons[i, j].SetValue(IsAvailableProperty, false);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Will check in every direction to see if this square given as argument is playable
+        /// Will then update his status according to the result of the search
+        /// </summary>
+        /// <param name=x> x position of the current square to check</param>
+        /// <param name=y> y position of the current square to check</param>
+        /// <param name=currentPlayer> status of the current player</param>
         private void UpdateButtonAvailability(int x, int y, SquareStatus currentPlayer)
         {
             int[,] directionToCheck = { { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, -1 }, { 0, 1 }, { 1, -1 }, { 1, 0 }, { 1, 1 } };
@@ -232,14 +265,31 @@ namespace ArcOthelloAB
             UpdateButtonStyle(button);
         }
 
-        /**
-         * Will check in a given direction if the a pawn can be placed on the current empty square
-         * 
-         * The direction is given by a movement in x and y: dirX and dirY argument
-         * These value should be {-1,0,1} with at least one of the two not set at 0
-         * 
-         * the position of empty square is given by x and y argument
-         */
+        /// <summary>
+        /// check if at least one button is available to play
+        /// </summary>
+        /// <returns>true if there is one to play, false if there isn't</returns>
+        private bool checkButtonsAvailability()
+        {
+            for (int i = 0; i < TOTAL_COLLUMN; i++)
+            {
+                for (int j = 0; j < TOTAL_ROW; j++)
+                {
+                    if ((bool)buttons[i, j].GetValue(IsAvailableProperty) == true && (SquareStatus)buttons[i, j].GetValue(CurrentStatus) == SquareStatus.NoPawn)
+                        return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Will check in a given direction if the a pawn can be placed on the current empty square
+        /// </summary>
+        /// <param name=dirX> direction ot move for each step in x coordonate</param>
+        /// <param name=dirY> direction ot move for each step in y coordonate</param>
+        /// <param name=x> x coordonate of clicked button</param>
+        /// <param name=y> y coordonate of clicked button</param>
+        /// <param name=currentStatus> status of the current player</param>
         private bool CheckOtherPawnFromDirection(int dirX, int dirY, int x, int y, SquareStatus currentStatus)
         {
             if (dirX == 0 && dirY == 0)
@@ -285,13 +335,12 @@ namespace ArcOthelloAB
 
         /// <summary>
         /// Will modify pawn status in a given direction
-        /// 
+        /// </summary>
         /// <param name=dirX> direction ot move for each step in x coordonate</param>
         /// <param name=dirY> direction ot move for each step in y coordonate</param>
         /// <param name=x> x coordonate of clicked button</param>
         /// <param name=y> y coordonate of clicked button</param>
         /// <param name=currentStatus> status of the current player</param>
-        /// </summary>
         private void setOtherPawnFromDirection(int dirX, int dirY, int x, int y, SquareStatus currentStatus)
         {
             x += dirX;
@@ -319,9 +368,9 @@ namespace ArcOthelloAB
 
         /// <summary>
         /// Count the score of a pawn type
+        /// </summary>
         /// <param name=pawnType>pawn type (WHITE_PAWN or BLACK_PAWN)</param>
         /// <returns>score of pawnType</returns>
-        /// </summary>
         public int GetScore(SquareStatus pawnStatus)
         {
             int score = 0;
@@ -335,12 +384,22 @@ namespace ArcOthelloAB
 
         /// <summary>
         /// Get the status of a square
+        /// </summary>
         /// <param name=pawnType>x and y position of square in grid</param>
         /// <returns>status of square at the [x,y] coordonate</returns>
-        /// </summary>
         public SquareStatus getStatus(int x, int y)
         {
             return (SquareStatus)buttons[x, y].GetValue(CurrentStatus);
+        }
+
+        /// <summary>
+        /// Get the playability of a square
+        /// </summary>
+        /// <param name=pawnType>x and y position of square in grid</param>
+        /// <returns>playability of square at the [x,y] coordonate</returns>
+        public bool getPlayability(int x, int y)
+        {
+            return (bool)buttons[x, y].GetValue(IsAvailableProperty);
         }
     }
 }
