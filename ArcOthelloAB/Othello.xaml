@@ -30,8 +30,8 @@
                 <RowDefinition Height="1*" />
             </Grid.RowDefinitions>
             <Label x:Name="LblPlayerWhite" Content="Player White" Grid.Row="0" Grid.ColumnSpan="2" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-            <Label x:Name="LblScorePlayerWhite" Grid.Row="1" Grid.Column="1" Content="Score" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-            <Label x:Name="LblTimePlayerWhite" Grid.Row="2" Grid.Column="1" Content="{ Binding  TimePlayedWhite }" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <Label x:Name="LblScorePlayerWhite" Grid.Row="1" Grid.Column="1" Content="{ Binding  score.ScoreWhite }" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <Label x:Name="LblTimePlayerWhite" Grid.Row="2" Grid.Column="1" Content="{ Binding  time.TimePlayedWhite }" HorizontalAlignment="Left" VerticalAlignment="Center"/>
         </Grid>
 
         <Grid x:Name="GridInfoPlayerBlack" Grid.Row="0" Grid.Column="2">
@@ -45,8 +45,8 @@
                 <RowDefinition Height="1*" />
             </Grid.RowDefinitions>
             <Label x:Name="lblPlayerBlack" Content="Player Black" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-            <Label x:Name="LblScorePlayerBlack" Grid.Row="1" Grid.Column="0" Content="Score" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-            <Label x:Name="LblTimePlayerBlack" Grid.Row="2" Grid.Column="0" Content="{ Binding  TimePlayedBlack }" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+            <Label x:Name="LblScorePlayerBlack" Grid.Row="1" Grid.Column="0" Content="{ Binding  score.ScoreBlack }" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+            <Label x:Name="LblTimePlayerBlack" Grid.Row="2" Grid.Column="0" Content="{ Binding  time.TimePlayedBlack }" HorizontalAlignment="Right" VerticalAlignment="Center"/>
         </Grid>
         <!-- Second Row-->
         <DockPanel x:Name="DockGameConainter" Grid.Row="1" Grid.Column="1" LastChildFill="True">

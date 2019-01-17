@@ -30,14 +30,16 @@ namespace ArcOthelloAB
 
         public SquareStatus currentPlayer;
         private readonly TimeHandler timeHandler;
+        private readonly ScoreHandler scoreHandler;
         private readonly Window parent;
 
-        public ButtonHandler(Window parent, Grid gameGrid, UIElement[,] buttons, TimeHandler timeHandler, int TOTAL_ROW = 7, int TOTAL_COLLUMN = 9)
+        public ButtonHandler(Window parent, Grid gameGrid, UIElement[,] buttons, TimeHandler timeHandler, ScoreHandler scoreHandler, int TOTAL_ROW = 7, int TOTAL_COLLUMN = 9)
         {
             this.parent = parent;
             this.gameGrid = gameGrid;
             this.buttons = buttons;
             this.timeHandler = timeHandler;
+            this.scoreHandler = scoreHandler;
             this.TOTAL_ROW = TOTAL_ROW;
             this.TOTAL_COLLUMN = TOTAL_COLLUMN;
 
@@ -119,6 +121,8 @@ namespace ArcOthelloAB
         {
             if (player == SquareStatus.NoPawn)
                 player = currentPlayer;
+            else
+                currentPlayer = player;
 
             Button button = (Button)buttons[x, y];
             
@@ -166,6 +170,9 @@ namespace ArcOthelloAB
 
             // Change player timer
             timeHandler.Switch();
+
+            // Update score
+            scoreHandler.SetScores(GetScore(SquareStatus.BlackPawn), GetScore(SquareStatus.WhitePawn));
         }
 
         /// <summary>
@@ -221,9 +228,13 @@ namespace ArcOthelloAB
             setButtonState((Button) buttons[x, y], newStatus);
         }
 
-        public void UpdateAllButtonAvailability(bool player)
+        /// <summary>
+        /// Update all the button availability according to the current player given as argument
+        /// </summary>
+        /// <param name="iswhitePlayer">if the current player is white pawn</param>
+        public void UpdateAllButtonAvailability(bool iswhitePlayer)
         {
-            if (player)
+            if (iswhitePlayer)
                 currentPlayer = SquareStatus.WhitePawn;
             else
                 currentPlayer = SquareStatus.BlackPawn;
@@ -311,7 +322,7 @@ namespace ArcOthelloAB
 
             SquareStatus nextPawnStatus = (SquareStatus)currentButton.GetValue(CurrentStatus);
 
-            bool hasAtLeastOneEnnemy = false;
+            bool hasAtLeastOneEnnemy = false; // if there isn't a single ennemy and the search stoped then it must not return false
 
             // as long as there is only ennemy pawn alligned
             while (nextPawnStatus == opponentStatus)
@@ -356,6 +367,7 @@ namespace ArcOthelloAB
             Button currentButton = (Button) buttons[x, y];
             SquareStatus nextPawnStatus = (SquareStatus)currentButton.GetValue(CurrentStatus);
 
+            // as long as ennemy pawn are alligned, will change their status to the current player
             while (nextPawnStatus == opponentStatus)
             {
                 setButtonState(currentButton, currentStatus);

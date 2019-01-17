@@ -53,8 +53,6 @@ namespace ArcOthelloAB
             base.Start();
         }
 
-        // public void
-
         public void Switch()
         {
             whiteTurn = !whiteTurn;
