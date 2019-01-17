@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:ArcOthelloAB"
         mc:Ignorable="d"
         Title="Othello" Height="450" Width="800"
-        Closing="Window_Closing">
+        Closing="Window_Closing"
+        Background="{DynamicResource O_WhiteBrush}">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />
@@ -48,39 +49,76 @@
             <Label x:Name="LblTimePlayerBlack" Grid.Row="2" Grid.Column="0" Content="{ Binding  TimePlayedBlack }" HorizontalAlignment="Right" VerticalAlignment="Center"/>
         </Grid>
         <!-- Second Row-->
-        <Grid x:Name="GameGrid" Grid.Row="1" Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-                <RowDefinition/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-        </Grid>
+        <DockPanel x:Name="DockGameConainter" Grid.Row="1" Grid.Column="1" LastChildFill="True">
+            <Grid x:Name="GridLetter" DockPanel.Dock="Top" Width="Auto">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="10"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="1" HorizontalAlignment="Center">A</Label>
+                <Label Grid.Column="2" HorizontalAlignment="Center">B</Label>
+                <Label Grid.Column="3" HorizontalAlignment="Center">C</Label>
+                <Label Grid.Column="4" HorizontalAlignment="Center">D</Label>
+                <Label Grid.Column="5" HorizontalAlignment="Center">E</Label>
+                <Label Grid.Column="6" HorizontalAlignment="Center">F</Label>
+                <Label Grid.Column="7" HorizontalAlignment="Center">G</Label>
+                <Label Grid.Column="8" HorizontalAlignment="Center">H</Label>
+                <Label Grid.Column="9" HorizontalAlignment="Center">I</Label>
+            </Grid>
+            <Grid x:Name="GridNumber" DockPanel.Dock="Left">
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0" VerticalAlignment="Center">1</Label>
+                <Label Grid.Row="1" VerticalAlignment="Center">2</Label>
+                <Label Grid.Row="2" VerticalAlignment="Center">3</Label>
+                <Label Grid.Row="3" VerticalAlignment="Center">4</Label>
+                <Label Grid.Row="4" VerticalAlignment="Center">5</Label>
+                <Label Grid.Row="5" VerticalAlignment="Center">6</Label>
+                <Label Grid.Row="6" VerticalAlignment="Center">7</Label>
+            </Grid>
+            <Grid x:Name="GameGrid" Grid.Row="1" Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+            </Grid>
+        </DockPanel>
         <StackPanel  Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <!-- https://stackoverflow.com/questions/932510/how-do-i-space-out-the-child-elements-of-a-stackpanel -->
-            <StackPanel.Resources>
-                <Style TargetType="{x:Type Button}">
-                    <Setter Property="Margin" Value="0,10,0,0"/>
-                </Style>
-            </StackPanel.Resources>
-            <Button x:Name="BtnSettings" Content="Setting" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" Click="BtnSettings_Click" IsEnabled="False"/>
-            <Button x:Name="BtnSave" Content="Save" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" Click="BtnSave_Click"/>
-            <Button x:Name="BtnLoad" Content="Load" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" Click="BtnLoad_Click"/>
-            <Button x:Name="BtnBack" Content="Back" HorizontalAlignment="Center" VerticalAlignment="Center" Width="75" Click="BtnBack_Click"/>
+            <Button x:Name="BtnSettings" Content="Setting" Click="BtnSettings_Click" Style="{DynamicResource UIGameButton}" IsEnabled="False"/>
+            <Button x:Name="BtnSave" Content="Save" Click="BtnSave_Click" Style="{DynamicResource UIGameButton}"/>
+            <Button x:Name="BtnLoad" Content="Load" Click="BtnLoad_Click" Style="{DynamicResource UIGameButton}"/>
+            <Button x:Name="BtnBack" Content="Back" Click="BtnBack_Click" Style="{DynamicResource UIGameButton}"/>
         </StackPanel>
     </Grid>
 </Window>
