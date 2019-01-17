@@ -113,14 +113,5 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\blackPawn.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\whitePawn.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\playableSquare.jpg" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
