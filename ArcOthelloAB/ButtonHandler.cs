@@ -30,14 +30,16 @@ namespace ArcOthelloAB
 
         public SquareStatus currentPlayer;
         private readonly TimeHandler timeHandler;
+        private readonly ScoreHandler scoreHandler;
         private readonly Window parent;
 
-        public ButtonHandler(Window parent, Grid gameGrid, UIElement[,] buttons, TimeHandler timeHandler, int TOTAL_ROW = 7, int TOTAL_COLLUMN = 9)
+        public ButtonHandler(Window parent, Grid gameGrid, UIElement[,] buttons, TimeHandler timeHandler, ScoreHandler scoreHandler, int TOTAL_ROW = 7, int TOTAL_COLLUMN = 9)
         {
             this.parent = parent;
             this.gameGrid = gameGrid;
             this.buttons = buttons;
             this.timeHandler = timeHandler;
+            this.scoreHandler = scoreHandler;
             this.TOTAL_ROW = TOTAL_ROW;
             this.TOTAL_COLLUMN = TOTAL_COLLUMN;
 
@@ -119,6 +121,8 @@ namespace ArcOthelloAB
         {
             if (player == SquareStatus.NoPawn)
                 player = currentPlayer;
+            else
+                currentPlayer = player;
 
             Button button = (Button)buttons[x, y];
             
@@ -166,6 +170,9 @@ namespace ArcOthelloAB
 
             // Change player timer
             timeHandler.Switch();
+
+            // Update score
+            scoreHandler.SetScores(GetScore(SquareStatus.BlackPawn), GetScore(SquareStatus.WhitePawn));
         }
 
         /// <summary>

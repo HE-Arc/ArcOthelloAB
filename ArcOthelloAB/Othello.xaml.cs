@@ -28,7 +28,7 @@ namespace ArcOthelloAB
         private TimeHandler TimeHandlerContext;
 
         // Score properties
-        // TODO Score implementation
+        private ScoreHandler ScoreHandlerContext;
 
         // Files properties
         private static string FILE_FORMAT = "Text file (*.txt)|*.txt";
@@ -54,13 +54,20 @@ namespace ArcOthelloAB
             this.parent = parent;
             InitializeComponent();
 
-            // Timer
+            // Data
             TimeHandlerContext = new TimeHandler();
-            DataContext = TimeHandlerContext;
+            ScoreHandlerContext = new ScoreHandler();
+            
+            // set two classes as data
+            DataContext = new
+            {
+                time = TimeHandlerContext,
+                score = ScoreHandlerContext
+            };
 
             // Generate the board
             buttons = new Button[TOTAL_COLLUMN, TOTAL_ROW];
-            buttonHandler = new ButtonHandler(this, this.GameGrid, buttons, TimeHandlerContext);
+            buttonHandler = new ButtonHandler(this, this.GameGrid, buttons, TimeHandlerContext, ScoreHandlerContext);
 
             // Active (or not) the AI
             if (aiPlayer)
