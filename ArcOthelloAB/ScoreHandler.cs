@@ -11,14 +11,14 @@ namespace ArcOthelloAB
     class ScoreHandler : DispatcherTimer, INotifyPropertyChanged
     {
         // Properties
-        private int scoreBlack;    // Seconds
+        private int scoreBlack;
         public int ScoreBlack
         {
             get { return scoreBlack; }
             set { scoreBlack = value; RaisePropertyChanged("ScoreBlack"); }
         }
 
-        private int scoreWhite;    // Seconds
+        private int scoreWhite;
         public int ScoreWhite
         {
             get { return scoreWhite; }

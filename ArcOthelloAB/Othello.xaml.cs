@@ -114,6 +114,10 @@ namespace ArcOthelloAB
             // TODO show new window
         }
 
+        /// <summary>
+        /// Create a file name for a save file
+        /// </summary>
+        /// <returns>string of the file name</returns>
         private static string GenerateGameFileName()
         {
             StringBuilder sb = new StringBuilder();
@@ -149,6 +153,7 @@ namespace ArcOthelloAB
                 try
                 {
                     SaveInFile(filePath);
+                    TimeHandlerContext.Start();
                 }
                 catch (Exception ex)
                 {
@@ -226,9 +231,9 @@ namespace ArcOthelloAB
 
         /// <summary>
         /// Load a game from a file
+        /// </summary>
         /// <param name=path>path of the game file</param>
         /// <returns>success</returns>
-        /// </summary>
         private void LoadFromFile(string path)
         {
             string[] lines = System.IO.File.ReadAllLines(path);
@@ -280,6 +285,10 @@ namespace ArcOthelloAB
                 // Assign the pawn value to the corresponding button
                 buttonHandler.SetButtonState(x, y, squareStatus);
             }
+
+            // if the current player is not the same as the loaded player, must also adjust the current player's timer running
+            if (buttonHandler.currentPlayer == SquareStatus.WhitePawn && !iswhitePlayer || buttonHandler.currentPlayer == SquareStatus.BlackPawn && iswhitePlayer)
+                TimeHandlerContext.Switch();
             buttonHandler.UpdateAllButtonAvailability(iswhitePlayer);
         }
 
@@ -351,9 +360,9 @@ namespace ArcOthelloAB
 
         /// <summary>
         /// Count the score of a pawn type
+        /// </summary>
         /// <param name=pawnType>pawn type (WHITE_PAWN or BLACK_PAWN)</param>
         /// <returns>score of pawnType</returns>
-        /// </summary>
         private int GetScore(SquareStatus pawnStatus)
         {
             return buttonHandler.GetScore(pawnStatus);
