@@ -249,6 +249,9 @@ namespace ArcOthelloAB
                         buttons[i, j].SetValue(IsAvailableProperty, false);
                 }
             }
+
+            // Update score
+            scoreHandler.SetScores(GetScore(SquareStatus.BlackPawn), GetScore(SquareStatus.WhitePawn));
         }
 
         /// <summary>
