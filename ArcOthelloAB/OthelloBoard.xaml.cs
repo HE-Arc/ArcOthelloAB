@@ -10,7 +10,7 @@ namespace ArcOthelloAB
     /// <summary>
     /// Logique d'interaction pour Othello.xaml
     /// </summary>
-    public partial class Othello : Window, IPlayable.IPlayable
+    public partial class OthelloBoard : Window, IPlayable.IPlayable
     {
         // UI properties
         private Window parent;
@@ -48,7 +48,7 @@ namespace ArcOthelloAB
         /// Construct an Othello Game
         /// </summary>
         /// <param name="parent">parent Window</param>
-        public Othello(Window parent, bool aiPlayer = false)
+        public OthelloBoard(Window parent, bool aiPlayer = false)
         {
 
             this.parent = parent;
@@ -85,7 +85,7 @@ namespace ArcOthelloAB
         /// </summary>
         /// <param name="parent">parent Window</param>
         /// <param name="filePath">path of the file game</param>
-        public Othello(Window parent, string filePath) : this(parent)
+        public OthelloBoard(Window parent, string filePath) : this(parent)
         {
             try
             {

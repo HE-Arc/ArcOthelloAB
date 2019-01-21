@@ -10,7 +10,7 @@ namespace ArcOthelloAB
         public static readonly DependencyProperty IsAvailableProperty =
             DependencyProperty.Register(
             "isAvailable", typeof(Boolean),
-            typeof(Othello)
+            typeof(OthelloBoard)
             );
         public SquareStatus status { get; set; }
 
@@ -18,7 +18,7 @@ namespace ArcOthelloAB
         public static readonly DependencyProperty CurrentStatus =
             DependencyProperty.Register(
             "currentStatus", typeof(SquareStatus),
-            typeof(Othello)
+            typeof(OthelloBoard)
             );
         
         private UIElement[,] buttons;
@@ -144,6 +144,8 @@ namespace ArcOthelloAB
 
                 if (!checkButtonsAvailability()) // if the player can't play anywhere, change player again
                     changePlayer();
+                if (!checkButtonsAvailability())
+                    finishgame();
             }
             return true;
         }
@@ -379,6 +381,21 @@ namespace ArcOthelloAB
                 currentButton = (Button) buttons[x, y];
                 nextPawnStatus = (SquareStatus)currentButton.GetValue(CurrentStatus);
             }
+        }
+
+        /// <summary>
+        /// Called when the game finisher
+        /// No player can make a move
+        /// </summary>
+        private void finishgame()
+        {
+            if(GetScore(SquareStatus.BlackPawn)>GetScore(SquareStatus.WhitePawn))
+                MessageBox.Show("Victoire des pions noir", "Fin de partie");
+            else if(GetScore(SquareStatus.BlackPawn) < GetScore(SquareStatus.WhitePawn))
+                MessageBox.Show("Victoire des pions blanc", "Fin de partie");
+            else
+                MessageBox.Show("Egalité", "Fin de partie");
+
         }
 
         /// <summary>

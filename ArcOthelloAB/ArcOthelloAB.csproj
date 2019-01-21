@@ -79,14 +79,14 @@
       <DependentUpon>Home.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Othello.xaml">
+    <Page Include="OthelloBoard.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Othello.xaml.cs">
-      <DependentUpon>Othello.xaml</DependentUpon>
+    <Compile Include="OthelloBoard.xaml.cs">
+      <DependentUpon>OthelloBoard.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

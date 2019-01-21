@@ -30,7 +30,7 @@ namespace ArcOthelloAB
 
         private void BtnPlay_Click(object sender, RoutedEventArgs e)
         {
-            new Othello(this).Show();
+            new OthelloBoard(this).Show();
             Hide();
         }
 
@@ -46,7 +46,7 @@ namespace ArcOthelloAB
             {
                 //Get the path of specified file
                 filePath = openFileDialog.FileName;
-                new Othello(this, filePath).Show();
+                new OthelloBoard(this, filePath).Show();
                 Hide();
             }
         }
