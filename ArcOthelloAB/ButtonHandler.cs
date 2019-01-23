@@ -55,13 +55,13 @@ namespace ArcOthelloAB
                 for (int j = 0; j < TOTAL_ROW; j++)
                 {
                     Button btn = new Button();
-
                     int btnX = i;
                     int btnY = j;
                     btn.Click += (sender, e) =>
                     {
                         buttonAction(btnX, btnY);
                     };
+
                     gameGrid.Children.Add(btn); // add button as children to gamegrid
                     Grid.SetRow(btn, j); // search the btn contained in a grid and setup a row position
                     Grid.SetColumn(btn, i); // setup a column

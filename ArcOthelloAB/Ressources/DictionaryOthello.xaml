@@ -55,31 +55,49 @@
         <Setter Property="Width" Value="150"/>
         <Setter Property="Margin" Value="0,20,0,0"/>
     </Style>
-
+    <Style x:Key="PlayerName"
+           TargetType="Label">
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="FontSize" Value="20" />
+    </Style>
+    <Style x:Key="HasWonStyle"
+           TargetType="Label">
+        <Setter Property="HorizontalAlignment" Value="Center"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="FontSize" Value="30" />
+    </Style>
+    
     <!--
     Game
     -->    
     <!-- Pawns-->
-    <Ellipse x:Key="WhitePawn"
-             x:Shared="false"
-             Width="40"  
-             Height="40"
-             Fill="{DynamicResource O_WhiteBrush}"
-             Stroke="{DynamicResource O_GreyBrush}"
-             StrokeThickness="2" />
-    
-    <Ellipse x:Key="BlackPawn"
-             x:Shared="false"
+    <Viewbox x:Key="WhitePawn"
+             StretchDirection="Both"
+             Stretch="Uniform"
+             x:Shared="false">
+        <Ellipse Width="40"  
+                 Height="40"
+                 Fill="{DynamicResource O_WhiteBrush}"
+                 Stroke="{DynamicResource O_GreyBrush}"
+                 StrokeThickness="2" />
+    </Viewbox>
+    <Viewbox x:Key="BlackPawn"
+             StretchDirection="Both"
+             Stretch="Uniform"
+             x:Shared="false">
+        <Ellipse
              Width="40"  
              Height="40"
              Fill="{DynamicResource O_BlackBrush}"
              Stroke="{DynamicResource O_GreyBrush}"
              StrokeThickness="2" />
+    </Viewbox>
 
     <!-- Empty Square Style-->
     <Style x:Key="NoPawn"
            TargetType="Button">
-        <Setter Property="Background" Value="{DynamicResource O_GreenBrush$}"/>
+        <Setter Property="Background" Value="{DynamicResource O_GreenBrush}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">

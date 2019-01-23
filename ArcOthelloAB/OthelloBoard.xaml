@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ArcOthelloAB"
         mc:Ignorable="d"
-        Title="Othello" Height="450" Width="800"
+        Title="Othello" Height="600" Width="800"
         Closing="Window_Closing"
         Background="{DynamicResource O_WhiteBrush}">
     <Grid>
@@ -15,7 +15,7 @@
             <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="1*"/>
+            <RowDefinition Height="2*"/>
             <RowDefinition Height="4*" />
         </Grid.RowDefinitions>
         <!-- First Row-->
@@ -25,14 +25,18 @@
                 <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="1*"/>
-                <RowDefinition Height="1*" />
-                <RowDefinition Height="1*" />
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <Label x:Name="LblPlayerWhite" Content="Player White" Grid.Row="0" Grid.ColumnSpan="2" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <Label x:Name="LblPlayerWhite" Content="Player White" Grid.Row="0" Grid.ColumnSpan="2" Grid.Column="0" Style="{StaticResource PlayerName}"/>
+            <Label Grid.Row="1" Grid.Column="0" HorizontalContentAlignment="Right">Score</Label>
             <Label x:Name="LblScorePlayerWhite" Grid.Row="1" Grid.Column="1" Content="{ Binding  score.ScoreWhite }" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <Label Grid.Row="2" Grid.Column="0" HorizontalContentAlignment="Right">Time</Label>
             <Label x:Name="LblTimePlayerWhite" Grid.Row="2" Grid.Column="1" Content="{ Binding  time.TimePlayedWhite }" HorizontalAlignment="Left" VerticalAlignment="Center"/>
         </Grid>
+
+        <Label x:Name="HasWonLabel" Grid.Row ="0" Grid.Column="1" Style="{StaticResource HasWonStyle}">Black has won !</Label>
 
         <Grid x:Name="GridInfoPlayerBlack" Grid.Row="0" Grid.Column="2">
             <Grid.ColumnDefinitions>
@@ -40,12 +44,14 @@
                 <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="1*"/>
-                <RowDefinition Height="1*" />
-                <RowDefinition Height="1*" />
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <Label x:Name="lblPlayerBlack" Content="Player Black" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+            <Label x:Name="lblPlayerBlack" Content="Player Black" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource PlayerName}"/>
+            <Label Grid.Row="1" Grid.Column="1" HorizontalContentAlignment="Left">Score</Label>
             <Label x:Name="LblScorePlayerBlack" Grid.Row="1" Grid.Column="0" Content="{ Binding  score.ScoreBlack }" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+            <Label Grid.Row="2" Grid.Column="1" HorizontalContentAlignment="Left">Time</Label>
             <Label x:Name="LblTimePlayerBlack" Grid.Row="2" Grid.Column="0" Content="{ Binding  time.TimePlayedBlack }" HorizontalAlignment="Right" VerticalAlignment="Center"/>
         </Grid>
         <!-- Second Row-->
@@ -91,7 +97,7 @@
                 <Label Grid.Row="5" VerticalAlignment="Center">6</Label>
                 <Label Grid.Row="6" VerticalAlignment="Center">7</Label>
             </Grid>
-            <Grid x:Name="GameGrid" Grid.Row="1" Grid.Column="1">
+            <Grid x:Name="GameGrid" Grid.Row="1" Grid.Column="1" >
                 <Grid.RowDefinitions>
                     <RowDefinition/>
                     <RowDefinition/>

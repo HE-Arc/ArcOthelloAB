@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ArcOthelloAB"
         mc:Ignorable="d"
-        Title="ArcOthello" Height="450" Width="800"
+        Title="ArcOthello" Height="600" Width="800"
         Background="{DynamicResource O_WhiteBrush}">
     <Grid HorizontalAlignment="Center" ScrollViewer.VerticalScrollBarVisibility="Disabled">
         <Grid.ColumnDefinitions>
