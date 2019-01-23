@@ -265,6 +265,8 @@ namespace ArcOthelloAB
 
             // Update score
             scoreHandler.SetScores(GetScore(SquareStatus.BlackPawn), GetScore(SquareStatus.WhitePawn));
+            // Hide winning message if loading after the end of a game
+            HasWonLabel.Visibility = Visibility.Hidden;
         }
 
         /// <summary>
