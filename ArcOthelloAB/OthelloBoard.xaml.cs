@@ -1,4 +1,13 @@
-﻿using System;
+﻿// ===============================
+// OthelloBoard
+//
+// PROJECT: ArcOthelloAB
+// AUTHORS: Arzul Paul & Biloni Kim Aurore
+// DATE: 23.01.19
+// ORGANISATION: HE-Arc Neuchâtel
+// ===============================
+
+using System;
 using System.Linq;
 using System.Text;
 using System.Windows;

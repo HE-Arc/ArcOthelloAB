@@ -1,4 +1,13 @@
-﻿using System;
+﻿// ===============================
+// ButtonHandler
+//
+// PROJECT: ArcOthelloAB
+// AUTHORS: Arzul Paul & Biloni Kim Aurore
+// DATE: 23.01.19
+// ORGANISATION: HE-Arc Neuchâtel
+// ===============================
+
+using System;
 using System.Windows;
 using System.Windows.Controls;
 

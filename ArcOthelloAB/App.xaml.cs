@@ -1,9 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
+﻿// ===============================
+// App
+//
+// PROJECT: ArcOthelloAB
+// AUTHORS: Arzul Paul & Biloni Kim Aurore
+// DATE: 23.01.19
+// ORGANISATION: HE-Arc Neuchâtel
+// ===============================
+
 using System.Windows;
 
 namespace ArcOthelloAB
