@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:ArcOthelloAB"
         mc:Ignorable="d"
         Title="ArcOthello" Height="600" Width="800"
+        MinHeight="600" MinWidth="800"
         Background="{DynamicResource O_WhiteBrush}">
     <Grid HorizontalAlignment="Center" ScrollViewer.VerticalScrollBarVisibility="Disabled">
         <Grid.ColumnDefinitions>

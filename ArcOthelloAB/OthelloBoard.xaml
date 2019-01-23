@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:ArcOthelloAB"
         mc:Ignorable="d"
         Title="Othello" Height="600" Width="800"
+        MinHeight="600" MinWidth="800"
         Closing="Window_Closing"
         Background="{DynamicResource O_WhiteBrush}">
     <Grid>
@@ -15,8 +16,8 @@
             <ColumnDefinition Width="1*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="2*"/>
-            <RowDefinition Height="4*" />
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="2*" />
         </Grid.RowDefinitions>
         <!-- First Row-->
         <Grid x:Name="GridInfoPlayerWhite" Grid.Row="0" Grid.Column="0">
