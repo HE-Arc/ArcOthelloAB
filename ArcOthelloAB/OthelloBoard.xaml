@@ -122,7 +122,7 @@
             </Grid>
         </DockPanel>
         <StackPanel  Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Button x:Name="BtnSettings" Content="Setting" Click="BtnSettings_Click" Style="{DynamicResource UIGameButton}" IsEnabled="False"/>
+            <Button x:Name="BtnSettings" Content="Setting" Click="BtnSettings_Click" Style="{DynamicResource UIGameButton}" IsEnabled="False" Visibility="Hidden"/>
             <Button x:Name="BtnSave" Content="Save" Click="BtnSave_Click" Style="{DynamicResource UIGameButton}"/>
             <Button x:Name="BtnLoad" Content="Load" Click="BtnLoad_Click" Style="{DynamicResource UIGameButton}"/>
             <Button x:Name="BtnBack" Content="Back" Click="BtnBack_Click" Style="{DynamicResource UIGameButton}"/>

@@ -223,7 +223,6 @@ namespace ArcOthelloAB
         /// <param name="e"></param>
         private void BtnBack_Click(object sender, RoutedEventArgs e)
         {
-            // TODO ask user if he wants to save the game
             parent.Show();
             this.Close();
         }
@@ -320,8 +319,6 @@ namespace ArcOthelloAB
                 return false;
             if (!String.Equals(content[8], GAME_HEADER))
                 return false;
-
-            // TODO Imporove validation
 
             return true;
         }
