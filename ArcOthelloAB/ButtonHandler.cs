@@ -404,11 +404,11 @@ namespace ArcOthelloAB
         {
             timeHandler.Stop();
             if (GetScore(SquareStatus.BlackPawn)>GetScore(SquareStatus.WhitePawn))
-                HasWonLabel.Content = "Victoire des pions noir";
+                HasWonLabel.Content = "Black pawn victory";
             else if(GetScore(SquareStatus.BlackPawn) < GetScore(SquareStatus.WhitePawn))
-                HasWonLabel.Content = "Victoire des pions blanc";
+                HasWonLabel.Content = "White pawn victory";
             else
-                HasWonLabel.Content = "Egalité";
+                HasWonLabel.Content = "Draw game";
             HasWonLabel.Visibility = Visibility.Visible;
 
         }
