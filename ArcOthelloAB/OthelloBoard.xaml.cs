@@ -67,7 +67,7 @@ namespace ArcOthelloAB
 
             // Generate the board
             buttons = new Button[TOTAL_COLLUMN, TOTAL_ROW];
-            buttonHandler = new ButtonHandler(this, this.GameGrid, buttons, TimeHandlerContext, ScoreHandlerContext);
+            buttonHandler = new ButtonHandler(this, this.GameGrid, buttons, TimeHandlerContext, ScoreHandlerContext, this.HasWonLabel);
 
             // Active (or not) the AI
             if (aiPlayer)

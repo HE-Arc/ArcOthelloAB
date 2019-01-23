@@ -32,14 +32,16 @@ namespace ArcOthelloAB
         private readonly TimeHandler timeHandler;
         private readonly ScoreHandler scoreHandler;
         private readonly Window parent;
+        private Label HasWonLabel;
 
-        public ButtonHandler(Window parent, Grid gameGrid, UIElement[,] buttons, TimeHandler timeHandler, ScoreHandler scoreHandler, int TOTAL_ROW = 7, int TOTAL_COLLUMN = 9)
+        public ButtonHandler(Window parent, Grid gameGrid, UIElement[,] buttons, TimeHandler timeHandler, ScoreHandler scoreHandler, Label hasWonLabel, int TOTAL_ROW = 7, int TOTAL_COLLUMN = 9)
         {
             this.parent = parent;
             this.gameGrid = gameGrid;
             this.buttons = buttons;
             this.timeHandler = timeHandler;
             this.scoreHandler = scoreHandler;
+            this.HasWonLabel = hasWonLabel;
             this.TOTAL_ROW = TOTAL_ROW;
             this.TOTAL_COLLUMN = TOTAL_COLLUMN;
 
@@ -145,7 +147,7 @@ namespace ArcOthelloAB
                 if (!checkButtonsAvailability()) // if the player can't play anywhere, change player again
                     changePlayer();
                 if (!checkButtonsAvailability())
-                    finishgame();
+                    Finishgame();
             }
             return true;
         }
@@ -387,14 +389,16 @@ namespace ArcOthelloAB
         /// Called when the game finisher
         /// No player can make a move
         /// </summary>
-        private void finishgame()
+        private void Finishgame()
         {
-            if(GetScore(SquareStatus.BlackPawn)>GetScore(SquareStatus.WhitePawn))
-                MessageBox.Show("Victoire des pions noir", "Fin de partie");
+            timeHandler.Stop();
+            if (GetScore(SquareStatus.BlackPawn)>GetScore(SquareStatus.WhitePawn))
+                HasWonLabel.Content = "Victoire des pions noir";
             else if(GetScore(SquareStatus.BlackPawn) < GetScore(SquareStatus.WhitePawn))
-                MessageBox.Show("Victoire des pions blanc", "Fin de partie");
+                HasWonLabel.Content = "Victoire des pions blanc";
             else
-                MessageBox.Show("Egalité", "Fin de partie");
+                HasWonLabel.Content = "Egalité";
+            HasWonLabel.Visibility = Visibility.Visible;
 
         }
 

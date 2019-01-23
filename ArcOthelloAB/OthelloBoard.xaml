@@ -36,7 +36,7 @@
             <Label x:Name="LblTimePlayerWhite" Grid.Row="2" Grid.Column="1" Content="{ Binding  time.TimePlayedWhite }" HorizontalAlignment="Left" VerticalAlignment="Center"/>
         </Grid>
 
-        <Label x:Name="HasWonLabel" Grid.Row ="0" Grid.Column="1" Style="{StaticResource HasWonStyle}">Black has won !</Label>
+        <Label x:Name="HasWonLabel" Grid.Row ="0" Grid.Column="1" Visibility="Hidden" Style="{StaticResource HasWonStyle}">Black has won !</Label>
 
         <Grid x:Name="GridInfoPlayerBlack" Grid.Row="0" Grid.Column="2">
             <Grid.ColumnDefinitions>
