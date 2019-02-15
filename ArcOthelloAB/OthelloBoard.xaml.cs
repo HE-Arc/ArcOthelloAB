@@ -76,13 +76,13 @@ namespace ArcOthelloAB
 
             // Generate the board
             buttons = new Button[TOTAL_COLLUMN, TOTAL_ROW];
-            buttonHandler = new ButtonHandler(this, this.GameGrid, buttons, TimeHandlerContext, ScoreHandlerContext, this.HasWonLabel);
+            buttonHandler = new ButtonHandler(this, this.GameGrid, buttons, TimeHandlerContext, ScoreHandlerContext, this.HasWonLabel, aiPlayer);
 
             // Active (or not) the AI
             if (aiPlayer)
             {
                 AIPlayer = aiPlayer;
-                // TODO start the AI
+                buttonHandler.AITurn = this.PlayAITurn;
             }
 
             //Start the timer
@@ -374,6 +374,17 @@ namespace ArcOthelloAB
             return buttonHandler.GetScore(pawnStatus);
         }
 
+        /// <summary>
+        /// Used to launch the turn of the AI
+        /// Called when the corresponding action is triggered
+        /// </summary>
+        /// <param name="isWhite">if the AI plays white pawn</param>
+        private void PlayAITurn(bool isWhite)
+        {
+            GetNextMove(GetBoard(), 0, false); // Ai play its turn
+            buttonHandler.changeButtonClickable(true); //AI finished its turn, can now click the button
+        }
+
         /*
             IPlayable functions
         */
@@ -427,6 +438,22 @@ namespace ArcOthelloAB
         /// <returns></returns>
         public Tuple<int, int> GetNextMove(int[,] game, int level, bool whiteTurn)
         {
+            int collumnLenght = game.GetLength(0);
+            int rowLenght = game.GetLength(1);
+            for (int i = 0; i < collumnLenght; i++)
+            {
+                for (int j = 0; j < rowLenght; j++)
+                {
+                    if (IsPlayable(i, j, whiteTurn))
+                    {
+                        PlayMove(i, j, whiteTurn);
+                        MessageBox.Show(i + " , " + j);
+                        Tuple<int, int> playedMove = new Tuple<int, int>(i, j);
+                        return playedMove;
+                    }
+                }
+            }
+
             throw new NotImplementedException();
         }
 

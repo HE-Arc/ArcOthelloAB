@@ -43,7 +43,12 @@ namespace ArcOthelloAB
         private readonly Window parent;
         private Label HasWonLabel;
 
-        public ButtonHandler(Window parent, Grid gameGrid, UIElement[,] buttons, TimeHandler timeHandler, ScoreHandler scoreHandler, Label hasWonLabel, int TOTAL_ROW = 7, int TOTAL_COLLUMN = 9)
+        // AI property
+        private bool AIPlayer;
+        public Action<bool> AITurn;
+        public delegate void PlayAITurn(bool isAITurn);
+
+        public ButtonHandler(Window parent, Grid gameGrid, UIElement[,] buttons, TimeHandler timeHandler, ScoreHandler scoreHandler, Label hasWonLabel, bool AIPlayer, int TOTAL_ROW = 7, int TOTAL_COLLUMN = 9)
         {
             this.parent = parent;
             this.gameGrid = gameGrid;
@@ -53,6 +58,7 @@ namespace ArcOthelloAB
             this.HasWonLabel = hasWonLabel;
             this.TOTAL_ROW = TOTAL_ROW;
             this.TOTAL_COLLUMN = TOTAL_COLLUMN;
+            this.AIPlayer = AIPlayer;
 
             currentPlayer = SquareStatus.WhitePawn; // White Pawn starts by default
 
@@ -153,10 +159,17 @@ namespace ArcOthelloAB
 
                 changePlayer();// change the current player and update button
 
-                if (!checkButtonsAvailability()) // if the player can't play anywhere, change player again
+                if (!checkButtonsAvailability())// if the player can't play anywhere, change player again
+                { 
                     changePlayer();
-                if (!checkButtonsAvailability())
-                    Finishgame();
+                    if (!checkButtonsAvailability())
+                        Finishgame();
+                }
+                else if(AIPlayer && currentPlayer == SquareStatus.BlackPawn)
+                {
+                    changeButtonClickable(false);
+                    AITurn(false);
+                }
             }
             return true;
         }
@@ -178,9 +191,10 @@ namespace ArcOthelloAB
                 {
                     if ((SquareStatus)buttons[i, j].GetValue(CurrentStatus) == SquareStatus.NoPawn)
                         UpdateButtonAvailability(i, j, currentPlayer);
+                    else
+                        buttons[i, j].SetValue(IsAvailableProperty, false);
                 }
             }
-
             // Change player timer
             timeHandler.Switch();
 
@@ -447,6 +461,17 @@ namespace ArcOthelloAB
         public bool getPlayability(int x, int y)
         {
             return (bool)buttons[x, y].GetValue(IsAvailableProperty);
+        }
+
+        public void changeButtonClickable(bool isClickable)
+        {
+            for (int i = 0; i < TOTAL_COLLUMN; i++)
+            {
+                for (int j = 0; j < TOTAL_ROW; j++)
+                {
+                    buttons[i, j].IsEnabled = isClickable;
+                }
+            }
         }
     }
 }

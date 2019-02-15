@@ -62,7 +62,8 @@ namespace ArcOthelloAB
 
         private void BtnPlayAI_Click(object sender, RoutedEventArgs e)
         {
-            // TODO
+            new OthelloBoard(this,true).Show();
+            Hide();
         }
 
         private void BtnCredits_Click(object sender, RoutedEventArgs e)
