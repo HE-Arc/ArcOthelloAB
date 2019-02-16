@@ -43,7 +43,7 @@ namespace ArcOthelloAB
         public Tuple<int, int> GetNextMove(int[,] game, int level, bool whiteTurn)
         {
             MoveNode root = new MoveNode(game, whiteTurn);
-            int minOrMax = Convert.ToInt32(whiteTurn);  // TODO need to see when we must min or max
+            int minOrMax = 1;
             int parentValue = 0; // TODO 0 or 1 for begin search value
             Tuple<int, Tuple<int, int>> bestMove = AlphaBeta(root, level, minOrMax, parentValue);
             return bestMove.Item2;
@@ -69,10 +69,10 @@ namespace ArcOthelloAB
         /// <summary>
         /// Max function of alpha beta algorithm
         /// </summary>
-        /// <param name="root">MoveNode root</param>
+        /// <param name="root">MoveNode root of maximize</param>
         /// <param name="parentMin"></param>
         /// <param name="depth">depth to search</param>
-        /// <returns></returns>
+        /// <returns>Tuple containing the score and the move to maximize</returns>
         private Tuple<int, Tuple<int, int>> Maximize(MoveNode root, int parentMin, int depth)
         {
             if(depth == 0 || root.Final())
@@ -102,10 +102,10 @@ namespace ArcOthelloAB
         /// <summary>
         /// Min function of alpha beta algorithm
         /// </summary>
-        /// <param name="root"></param>
-        /// <param name="parentMax"></param>
-        /// <param name="depth"></param>
-        /// <returns></returns>
+        /// <param name="root">MoveNode root of minimize</param>
+        /// <param name="parentMax">max value of the parent</param>
+        /// <param name="depth">depth to search</param>
+        /// <returns>Tuple containing the score and the move to minimize</returns>
         private Tuple<int, Tuple<int, int>> Minimize(MoveNode root, int parentMax, int depth)
         {
             if (depth == 0 || root.Final())
@@ -143,19 +143,11 @@ namespace ArcOthelloAB
             /// <summary>
             /// Construct a move node using a game board
             /// </summary>
-            /// <param name="game"></param>
+            /// <param name="game">game board</param>
             public MoveNode(int[,] game, bool isWhiteTurn)
             {
                 this.game = game;
                 this.isWhiteTurn = isWhiteTurn;
-            }
-
-            /// <summary>
-            /// Constructor of MoveNode
-            /// </summary>
-            public MoveNode()
-            {
-                // TODO
             }
 
             /// <summary>
@@ -202,7 +194,7 @@ namespace ArcOthelloAB
             /// <summary>
             /// Returns applicable operators of node
             /// </summary>
-            /// <returns></returns>
+            /// <returns>List of possible operators</returns>
             public List<Tuple<int, int>> GetPossibleOperators()
             {
                 List<Tuple<int, int>> possibleOperators = new List<Tuple<int, int>>();
@@ -230,7 +222,7 @@ namespace ArcOthelloAB
             /// The move must be a valid move.
             /// </summary>
             /// <param name="move_operator"></param>
-            /// <returns></returns>
+            /// <returns>The resulting MoveNode</returns>
             public MoveNode Apply(Tuple<int, int> move_operator)
             {
                 int[,] newGame = game;
@@ -298,7 +290,7 @@ namespace ArcOthelloAB
             /// </summary>
             /// <param name="x">x position of the current square to check</param>
             /// <param name="y">y position of the current square to check</param>
-            /// <returns></returns>
+            /// <returns>if the square is playable or not</returns>
             private bool checkPlayableSquare(int x, int y)
             {
                 int[,] directionToCheck = { { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, -1 }, { 0, 1 }, { 1, -1 }, { 1, 0 }, { 1, 1 } };
@@ -318,11 +310,11 @@ namespace ArcOthelloAB
             /// <summary>
             /// Will check in a given direction if the a pawn can be placed on the current empty square
             /// </summary>
-            /// <param name=dirX> direction ot move for each step in x coordonate</param>
-            /// <param name=dirY> direction ot move for each step in y coordonate</param>
-            /// <param name=x> x coordonate of clicked button</param>
-            /// <param name=y> y coordonate of clicked button</param>
-            /// <param name=currentStatus> status of the current player</param>
+            /// <param name="dirX">direction ot move for each step in x coordonate</param>
+            /// <param name="dirY"> direction ot move for each step in y coordonate</param>
+            /// <param name="x"> x coordonate of clicked button</param>
+            /// <param name="y"> y coordonate of clicked button</param>
+            /// <returns>if the pawn is placable or not</returns>
             private bool CheckOtherPawnFromDirection(int dirX, int dirY, int x, int y)
             {
                 if (dirX == 0 && dirY == 0)
