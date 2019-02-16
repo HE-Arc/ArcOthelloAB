@@ -140,14 +140,20 @@ namespace ArcOthelloAB
             private int[,] game;
             public bool isWhiteTurn;
 
+            // evaluation tool
+            private int previousMobility;
+            private int currentMobility;
+
             /// <summary>
             /// Construct a move node using a game board
             /// </summary>
             /// <param name="game">game board</param>
-            public MoveNode(int[,] game, bool isWhiteTurn)
+            public MoveNode(int[,] game, bool isWhiteTurn, int previousMobility=0)
             {
                 this.game = game;
                 this.isWhiteTurn = isWhiteTurn;
+                this.previousMobility = previousMobility;
+                currentMobility = GetPossibleOperators().Count();
             }
 
             /// <summary>
@@ -159,23 +165,38 @@ namespace ArcOthelloAB
             /// <returns>score of the node</returns>
             public int Eval()
             {
-                int score = 0;
+                int score;
+
+                int pawnCountEvaluation = 0;
+
                 foreach (int pawn in game)
                 {
                     if (isWhiteTurn)
                     {
                         if (pawn == 1)
-                            score++;
+                            pawnCountEvaluation++;
                         if (pawn == 2)
-                            score--;
+                            pawnCountEvaluation--;
                     }
                     else
                     {
                         if (pawn == 1)
-                            score--;
+                            pawnCountEvaluation--;
                         if (pawn == 2)
-                            score++;
+                            pawnCountEvaluation++;
                     }
+                }
+
+                int mobilityDifference = currentMobility - previousMobility;
+
+                score = (int)(pawnCountEvaluation / 5 + mobilityDifference); // mobility is 5 time more important than pawn count
+
+                if(Final()) // if the node is final, then it means there's a winner, will heavely change Ai choice
+                {
+                    if (score > 0)
+                        return 100;
+                    if (score < 0)
+                        return -100;
                 }
                 return score;
             }
@@ -269,10 +290,12 @@ namespace ArcOthelloAB
                     }
                 }
 
+                int currentMobility = GetPossibleOperators().Count();
+
                 bool childTurn = !isWhiteTurn; // child turn will be the inverse of current turn
-                MoveNode child = new MoveNode(newGame, childTurn);
-                if (!child.GetPossibleOperators().Any()) // if after playing a move, the child has no available move, then it switches turn
-                    child.isWhiteTurn = this.isWhiteTurn;  // after switching turn, if there's still no move available, the game ended, function Final() will do this verification
+                MoveNode child = new MoveNode(newGame, childTurn, currentMobility);
+                /*if (!child.GetPossibleOperators().Any()) // if after playing a move, the child has no available move, then it switches turn
+                    child.isWhiteTurn = this.isWhiteTurn;  // after switching turn, if there's still no move available, the game ended, function Final() will do this verification*/
 
                 return child;
             }
