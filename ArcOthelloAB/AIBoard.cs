@@ -22,6 +22,7 @@ namespace ArcOthelloAB
         {
             board = new int[TOTAL_COLLUMN, TOTAL_ROW];
             othelloAI = OthelloAI_AB.GetInstance();
+            FillBoard();
         }
 
         public int[,] GetBoard()
@@ -63,15 +64,23 @@ namespace ArcOthelloAB
 
         public bool IsPlayable(int column, int line, bool isWhite)
         {
-            throw new NotImplementedException();
+            return GameLogic.checkPlayableSquare(board, column, line, isWhite);
         }
 
         public bool PlayMove(int column, int line, bool isWhite)
         {
-            throw new NotImplementedException();
+            if(IsPlayable(column, line, isWhite))
+            {
+                board = GameLogic.playMove(board, column, line, isWhite);
+                return true;
+            }
+            return false;
         }
 
-        private void fillBoard()
+        /// <summary>
+        /// fill the gameBoard with the initial pawn
+        /// </summary>
+        private void FillBoard()
         {
             for (int i = 0; i < TOTAL_COLLUMN; i++)
             {
@@ -303,7 +312,7 @@ namespace ArcOthelloAB
                     {
                         if (game[i, j] == -1)
                         {
-                            if (checkPlayableSquare(i, j))
+                            if (GameLogic.checkPlayableSquare(game,i, j, isWhiteTurn))
                                 possibleOperators.Add(new Tuple<int, int>(i, j));
                         }
                     }
@@ -321,49 +330,10 @@ namespace ArcOthelloAB
             /// <returns>The resulting MoveNode</returns>
             public MoveNode Apply(Tuple<int, int> move_operator)
             {
-                int[,] newGame = game;
-
                 int x = move_operator.Item1;
                 int y = move_operator.Item2;
 
-                int playerValue;
-                int opponentValue;
-                if (isWhiteTurn)
-                {
-                    playerValue = 0;
-                    opponentValue = 1;
-                }
-                else
-                {
-                    playerValue = 1;
-                    opponentValue = 0;
-                }
-
-                newGame[x, y] = playerValue;
-
-                int[,] directionToCheck = { { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, -1 }, { 0, 1 }, { 1, -1 }, { 1, 0 }, { 1, 1 } };
-
-                for (int i = 0; i < 8; i++)
-                {
-                    int dirX = directionToCheck[i, 0];
-                    int dirY = directionToCheck[i, 1];
-                    if (CheckOtherPawnFromDirection(dirX, dirY, x, y))
-                    {
-                        int nextX = x + dirX;
-                        int nextY = y + dirY;
-
-                        int nextSquareValue = newGame[nextX, nextY];
-
-                        // as long as ennemy pawn are alligned, will change their status to the current player
-                        while (nextSquareValue == opponentValue)
-                        {
-                            newGame[nextX, nextY] = playerValue;
-                            nextX += dirX;
-                            nextY += dirY;
-                            nextSquareValue = newGame[nextX, nextY];
-                        }
-                    }
-                }
+                int[,] newGame = GameLogic.playMove(game, x, y, isWhiteTurn);
 
                 int currentMobility = GetPossibleOperators().Count();
 
@@ -371,94 +341,148 @@ namespace ArcOthelloAB
                 MoveNode child = new MoveNode(newGame, childTurn, currentMobility);
                 return child;
             }
+        }
 
-            /// <summary>
-            /// Check if a given square is playable
-            /// 
-            /// return true if it is
-            /// </summary>
-            /// <param name="x">x position of the current square to check</param>
-            /// <param name="y">y position of the current square to check</param>
-            /// <returns>if the square is playable or not</returns>
-            public bool checkPlayableSquare(int x, int y)
+        
+    }
+
+
+    class GameLogic
+    {
+
+        /// <summary>
+        /// Check if a given square is playable
+        /// 
+        /// return true if it is
+        /// </summary>
+        /// <param name="x">x position of the current square to check</param>
+        /// <param name="y">y position of the current square to check</param>
+        /// <returns>if the square is playable or not</returns>
+        public static bool checkPlayableSquare(int[,] game, int x, int y, bool isWhiteTurn)
+        {
+            int[,] directionToCheck = { { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, -1 }, { 0, 1 }, { 1, -1 }, { 1, 0 }, { 1, 1 } };
+
+            bool isPlayable = false;
+
+            for (int i = 0; i < 8; i++)
             {
-                int[,] directionToCheck = { { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, -1 }, { 0, 1 }, { 1, -1 }, { 1, 0 }, { 1, 1 } };
+                int dirX = directionToCheck[i, 0];
+                int dirY = directionToCheck[i, 1];
+                if (CheckOtherPawnFromDirection(game, dirX, dirY, x, y, isWhiteTurn))
+                    isPlayable = true;
+            }
+            return isPlayable;
+        }
 
-                bool isPlayable = false;
+        /// <summary>
+        /// Play a move in a given oard at a given coordonate
+        /// </summary>
+        /// <param name="game"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="isWhite"></param>
+        /// <returns>A new gameboard with the played move</returns>
+        public static int[,] playMove(int[,] game, int x, int y, bool isWhite)
+        {
+            int[,] newGame = game;
 
-                for (int i = 0; i < 8; i++)
-                {
-                    int dirX = directionToCheck[i, 0];
-                    int dirY = directionToCheck[i, 1];
-                    if (CheckOtherPawnFromDirection(dirX, dirY, x, y))
-                        isPlayable = true;
-                }
-                return isPlayable;
+            int playerValue;
+            int opponentValue;
+            if (isWhite)
+            {
+                playerValue = 0;
+                opponentValue = 1;
+            }
+            else
+            {
+                playerValue = 1;
+                opponentValue = 0;
             }
 
+            newGame[x, y] = playerValue;
 
+            int[,] directionToCheck = { { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, -1 }, { 0, 1 }, { 1, -1 }, { 1, 0 }, { 1, 1 } };
 
-            //////////////////////
-            //      PRIVATE     //
-            //////////////////////
-
-
-
-            /// <summary>
-            /// Will check in a given direction if the a pawn can be placed on the current empty square
-            /// </summary>
-            /// <param name="dirX">direction ot move for each step in x coordonate</param>
-            /// <param name="dirY"> direction ot move for each step in y coordonate</param>
-            /// <param name="x"> x coordonate of clicked button</param>
-            /// <param name="y"> y coordonate of clicked button</param>
-            /// <returns>if the pawn is placable or not</returns>
-            private bool CheckOtherPawnFromDirection(int dirX, int dirY, int x, int y)
+            for (int i = 0; i < 8; i++)
             {
-                if (dirX == 0 && dirY == 0)
-                    return false;
-                x += dirX; // verification will advance in the given direction
+                int dirX = directionToCheck[i, 0];
+                int dirY = directionToCheck[i, 1];
+                if (CheckOtherPawnFromDirection(game,dirX, dirY, x, y, isWhite))
+                {
+                    int nextX = x + dirX;
+                    int nextY = y + dirY;
+
+                    int nextSquareValue = newGame[nextX, nextY];
+
+                    // as long as ennemy pawn are alligned, will change their status to the current player
+                    while (nextSquareValue == opponentValue)
+                    {
+                        newGame[nextX, nextY] = playerValue;
+                        nextX += dirX;
+                        nextY += dirY;
+                        nextSquareValue = newGame[nextX, nextY];
+                    }
+                }
+            }
+            return newGame;
+        }
+
+
+
+        /// <summary>
+        /// Will check in a given direction if the a pawn can be placed on the current empty square
+        /// </summary>
+        /// <param name="dirX">direction ot move for each step in x coordonate</param>
+        /// <param name="dirY"> direction ot move for each step in y coordonate</param>
+        /// <param name="x"> x coordonate of clicked button</param>
+        /// <param name="y"> y coordonate of clicked button</param>
+        /// <returns>if the pawn is placable or not</returns>
+        private static bool CheckOtherPawnFromDirection(int[,] game, int dirX, int dirY, int x, int y, bool isWhiteTurn)
+        {
+            if (dirX == 0 && dirY == 0)
+                return false;
+            x += dirX; // verification will advance in the given direction
+            y += dirY;
+
+            // if the next square is out of the grid
+            if (x < 0 || x >= game.GetLength(0) || y < 0 || y >= game.GetLength(1))
+                return false;
+
+            int nextSquareValue = game[x, y];
+
+            int playerValue;
+            int opponentValue;
+            if (isWhiteTurn)
+            {
+                playerValue = 0;
+                opponentValue = 1;
+            }
+            else
+            {
+                playerValue = 1;
+                opponentValue = 0;
+            }
+
+            bool hasAtLeastOneEnnemy = false; // if there isn't a single ennemy and the search stoped then it must not return false
+
+            // as long as there is only ennemy pawn alligned
+            while (nextSquareValue == opponentValue)
+            {
+                hasAtLeastOneEnnemy = true;
+                x += dirX;
                 y += dirY;
 
-                // if the next square is out of the grid
                 if (x < 0 || x >= game.GetLength(0) || y < 0 || y >= game.GetLength(1))
                     return false;
 
-                int nextSquareValue = game[x, y];
-
-                int playerValue;
-                int opponentValue;
-                if (isWhiteTurn)
-                {
-                    playerValue = 0;
-                    opponentValue = 1;
-                }
-                else
-                {
-                    playerValue = 1;
-                    opponentValue = 0;
-                }
-
-                bool hasAtLeastOneEnnemy = false; // if there isn't a single ennemy and the search stoped then it must not return false
-
-                // as long as there is only ennemy pawn alligned
-                while (nextSquareValue == opponentValue)
-                {
-                    hasAtLeastOneEnnemy = true;
-                    x += dirX;
-                    y += dirY;
-
-                    if (x < 0 || x >= game.GetLength(0) || y < 0 || y >= game.GetLength(1))
-                        return false;
-
-                    nextSquareValue = game[x, y];
-                }
-
-                // when a checked pawn isn't ennemy pawn, if it one of his pawn, he can place his pawn in the checked square
-                if (nextSquareValue == playerValue && hasAtLeastOneEnnemy)
-                    return true;
-                else
-                    return false;
+                nextSquareValue = game[x, y];
             }
+
+            // when a checked pawn isn't ennemy pawn, if it one of his pawn, he can place his pawn in the checked square
+            if (nextSquareValue == playerValue && hasAtLeastOneEnnemy)
+                return true;
+            else
+                return false;
         }
     }
 }
