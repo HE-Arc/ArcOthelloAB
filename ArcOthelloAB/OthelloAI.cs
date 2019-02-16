@@ -36,7 +36,7 @@ namespace ArcOthelloAB
         public Tuple<int, int> GetNextMove(int[,] game, int level, bool whiteTurn)
         {
             MoveNode root = new MoveNode(game);
-            int minOrMax = whiteTurn;  // TODO need to see when we must min or max
+            int minOrMax = Convert.ToInt32(whiteTurn);  // TODO need to see when we must min or max
             int parentValue = 0; // TODO 0 or 1 for begin search value
             Tuple<int, Tuple<int, int>> bestMove = AlphaBeta(root, level, minOrMax, parentValue);
             return bestMove.Item2;
@@ -66,15 +66,15 @@ namespace ArcOthelloAB
         /// <param name="parentMin"></param>
         /// <param name="depth">depth to search</param>
         /// <returns></returns>
-        private Tuple<int, Tuple<int, int>> Maximize(MoveNode root, MoveNode parentMin, int depth)
+        private Tuple<int, Tuple<int, int>> Maximize(MoveNode root, int parentMin, int depth)
         {
             if(depth == 0 || root.Final())
             {
-                return new Tuple(root.Eval(), null);
+                return new Tuple<int, Tuple<int, int>>(root.Eval(), null);
             }
 
             int maxValue = Int32.MinValue;
-            Tuple<int, int> maxMove;
+            Tuple<int, int> maxMove = null;
             foreach (var move in root.GetPossibleOperators())
             {
                 MoveNode child = root.Apply(move);
@@ -99,15 +99,15 @@ namespace ArcOthelloAB
         /// <param name="parentMax"></param>
         /// <param name="depth"></param>
         /// <returns></returns>
-        private Tuple<int, Tuple<int, int>> Minimize(MoveNode root, MoveNode parentMax, int depth)
+        private Tuple<int, Tuple<int, int>> Minimize(MoveNode root, int parentMax, int depth)
         {
             if (depth == 0 || root.Final())
             {
-                return new Tuple(root.Eval(), null);
+                return new Tuple<int, Tuple<int, int>>(root.Eval(), null);
             }
 
             int minValue = Int32.MaxValue;
-            Tuple<int, int> minMove;
+            Tuple<int, int> minMove = null;
             foreach (var move in root.GetPossibleOperators())
             {
                 MoveNode child = root.Apply(move);
@@ -130,17 +130,13 @@ namespace ArcOthelloAB
         /// </summary>
         private class MoveNode
         {
-			private int[,] game;
-            public bool isWhiteTurn;
-			
             /// <summary>
             /// Construct a move node using a game board
             /// </summary>
             /// <param name="game"></param>
-            public MoveNode(int[,] game, bool isWhiteTurn)
+            public MoveNode(int[,] game)
             {
-                this.game = game;
-                this.isWhiteTurn = isWhiteTurn;
+                // TODO
             }
 
             /// <summary>
@@ -153,32 +149,12 @@ namespace ArcOthelloAB
 
             /// <summary>
             /// Eval function of a node
-            /// 
-            /// the score equal number of pawn on the board of current player
-            /// minus number of pawn of opponent on the board
             /// </summary>
             /// <returns>score of the node</returns>
             public int Eval()
             {
-                int score = 0;
-                foreach (int pawn in game)
-                {
-                    if(isWhiteTurn)
-                    {
-                        if (pawn == 1)
-                            score++;
-                        if (pawn == 2)
-                            score--;
-                    }
-                    else
-                    {
-                        if (pawn == 1)
-                            score--;
-                        if (pawn == 2)
-                            score++;
-                    }
-                }
-                return score;
+                // TODO
+                return 0;
             }
 
             /// <summary>
@@ -187,9 +163,8 @@ namespace ArcOthelloAB
             /// <returns>final state boolean</returns>
             public bool Final()
             {
-                if (!GetPossibleOperators().Any()) // if there's no possible move return true
-                    return true;
-                return false;
+                // TODO
+                return true;
             }
 
             /// <summary>
@@ -198,7 +173,6 @@ namespace ArcOthelloAB
             /// <returns></returns>
             public List<Tuple<int, int>> GetPossibleOperators()
             {
-                // TODO, evaluate all square without pawn to see if they're playable, then add to a list
                 return null;
             }
 
@@ -209,17 +183,7 @@ namespace ArcOthelloAB
             /// <returns></returns>
             public MoveNode Apply(Tuple<int, int> move_operator)
             {
-                int[,] newGame;
-
-                // TODO, modify game according according to played move
-
-                bool childTurn = (isWhiteTurn + 1) % 2; // child turn will be the inverse of current turn
-                MoveNode child = new MoveNode(newGame, childTurn);
-
-                if (!child.GetPossibleOperators().Any()) // if after playing a move, the child has no available move, then it switches turn
-                    child.isWhiteTurn = this.isWhiteTurn;  // after switching turn, if there's still no move available, the game ended, function Final() will do this verification
-
-                return child;
+                return null;
             }
         }
     }
