@@ -219,14 +219,56 @@ namespace ArcOthelloAB
 
             /// <summary>
             /// Apply a move operator to the actual node. Return a new MoveNode.
+            /// 
+            /// The move must be a valid move.
             /// </summary>
             /// <param name="move_operator"></param>
             /// <returns></returns>
             public MoveNode Apply(Tuple<int, int> move_operator)
             {
                 int[,] newGame = game;
-                // TODO, modify game according according to played move
 
+                int x = move_operator.Item1;
+                int y = move_operator.Item2;
+
+                int playerValue;
+                int opponentValue;
+                if (isWhiteTurn)
+                {
+                    playerValue = 1;
+                    opponentValue = 2;
+                }
+                else
+                {
+                    playerValue = 2;
+                    opponentValue = 1;
+                }
+
+                newGame[x, y] = playerValue;
+
+                int[,] directionToCheck = { { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, -1 }, { 0, 1 }, { 1, -1 }, { 1, 0 }, { 1, 1 } };
+
+                for (int i = 0; i < 8; i++)
+                {
+                    int dirX = directionToCheck[i, 0];
+                    int dirY = directionToCheck[i, 1];
+                    if (CheckOtherPawnFromDirection(dirX, dirY, x, y))
+                    {
+                        int nextX = x + dirX;
+                        int nextY = y + dirY;
+
+                        int nextSquareValue = newGame[nextX, nextY];
+
+                        // as long as ennemy pawn are alligned, will change their status to the current player
+                        while (nextSquareValue == opponentValue)
+                        {
+                            newGame[nextX, nextY] = playerValue;
+                            nextX += dirX;
+                            nextY += dirY;
+                            nextSquareValue = newGame[nextX, nextY];
+                        }
+                    }
+                }
 
                 bool childTurn = !isWhiteTurn; // child turn will be the inverse of current turn
                 MoveNode child = new MoveNode(newGame, childTurn);
@@ -235,6 +277,7 @@ namespace ArcOthelloAB
 
                 return child;
             }
+
 
 
             //////////////////////
