@@ -35,7 +35,7 @@ namespace ArcOthelloAB
         /// <returns>Best move to play</returns>
         public Tuple<int, int> GetNextMove(int[,] game, int level, bool whiteTurn)
         {
-            MoveNode root = new MoveNode(game);
+            MoveNode root = new MoveNode(game, whiteTurn);
             int minOrMax = Convert.ToInt32(whiteTurn);  // TODO need to see when we must min or max
             int parentValue = 0; // TODO 0 or 1 for begin search value
             Tuple<int, Tuple<int, int>> bestMove = AlphaBeta(root, level, minOrMax, parentValue);
@@ -130,13 +130,17 @@ namespace ArcOthelloAB
         /// </summary>
         private class MoveNode
         {
+            private int[,] game;
+            public bool isWhiteTurn;
+
             /// <summary>
             /// Construct a move node using a game board
             /// </summary>
             /// <param name="game"></param>
-            public MoveNode(int[,] game)
+            public MoveNode(int[,] game, bool isWhiteTurn)
             {
-                // TODO
+                this.game = game;
+                this.isWhiteTurn = isWhiteTurn;
             }
 
             /// <summary>
@@ -173,7 +177,23 @@ namespace ArcOthelloAB
             /// <returns></returns>
             public List<Tuple<int, int>> GetPossibleOperators()
             {
-                return null;
+                List<Tuple<int, int>> possibleOperators = new List<Tuple<int, int>>();
+
+                int collumnLenght = game.GetLength(0);
+                int rowLenght = game.GetLength(1);
+                for (int i = 0; i < collumnLenght; i++)
+                {
+                    for (int j = 0; j < rowLenght; j++)
+                    {
+                        if(game[i,j] == 0)
+                        {
+                            if (checkPlayableSquare(i,j))
+                                possibleOperators.Add(new Tuple<int, int>(i, j));
+                        }
+                    }
+                }
+
+                return possibleOperators;
             }
 
             /// <summary>
@@ -184,6 +204,91 @@ namespace ArcOthelloAB
             public MoveNode Apply(Tuple<int, int> move_operator)
             {
                 return null;
+            }
+
+
+            //////////////////////
+            //      PRIVATE     //
+            //////////////////////
+
+            /// <summary>
+            /// Check if a given square is playable
+            /// 
+            /// return true if it is
+            /// </summary>
+            /// <param name="x">x position of the current square to check</param>
+            /// <param name="y">y position of the current square to check</param>
+            /// <returns></returns>
+            private bool checkPlayableSquare(int x, int y)
+            {
+                int[,] directionToCheck = { { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, -1 }, { 0, 1 }, { 1, -1 }, { 1, 0 }, { 1, 1 } };
+
+                bool isPlayable = false;
+
+                for (int i = 0; i < 8; i++)
+                {
+                    int dirX = directionToCheck[i, 0];
+                    int dirY = directionToCheck[i, 1];
+                    if (CheckOtherPawnFromDirection(dirX, dirY, x, y))
+                        isPlayable = true;
+                }
+                return isPlayable;
+            }
+
+            /// <summary>
+            /// Will check in a given direction if the a pawn can be placed on the current empty square
+            /// </summary>
+            /// <param name=dirX> direction ot move for each step in x coordonate</param>
+            /// <param name=dirY> direction ot move for each step in y coordonate</param>
+            /// <param name=x> x coordonate of clicked button</param>
+            /// <param name=y> y coordonate of clicked button</param>
+            /// <param name=currentStatus> status of the current player</param>
+            private bool CheckOtherPawnFromDirection(int dirX, int dirY, int x, int y)
+            {
+                if (dirX == 0 && dirY == 0)
+                    return false;
+                x += dirX; // verification will advance in the given direction
+                y += dirY;
+
+                // if the next square is out of the grid
+                if (x < 0 || x >= game.GetLength(0) || y < 0 || y >= game.GetLength(1))
+                    return false;
+
+                int nextSquareValue = game[x, y];
+
+                int playerValue;
+                int opponentValue;
+                if (isWhiteTurn)
+                {
+                    playerValue = 1;
+                    opponentValue = 2;
+                }
+                else
+                {
+                    playerValue = 2;
+                    opponentValue = 1;
+                }
+
+                bool hasAtLeastOneEnnemy = false; // if there isn't a single ennemy and the search stoped then it must not return false
+
+                // as long as there is only ennemy pawn alligned
+                while (nextSquareValue == opponentValue)
+                {
+                    hasAtLeastOneEnnemy = true;
+                    x += dirX;
+                    y += dirY;
+
+                    if (x < 0 || x >= game.GetLength(0) || y < 0 || y >= game.GetLength(1))
+                        return false;
+
+                    nextSquareValue = game[x, y];
+                }
+
+                // when a checked pawn isn't ennemy pawn, if it one of his pawn, he can place his pawn in the checked square
+                if (nextSquareValue == playerValue && hasAtLeastOneEnnemy)
+                    return true;
+                else
+                    return false;
             }
         }
     }
