@@ -32,6 +32,7 @@ namespace ArcOthelloAB
 
         // AI properties
         private bool AIPlayer;
+        //private 
 
         // Timer properties
         private TimeHandler TimeHandlerContext;
@@ -438,23 +439,8 @@ namespace ArcOthelloAB
         /// <returns></returns>
         public Tuple<int, int> GetNextMove(int[,] game, int level, bool whiteTurn)
         {
-            int collumnLenght = game.GetLength(0);
-            int rowLenght = game.GetLength(1);
-            for (int i = 0; i < collumnLenght; i++)
-            {
-                for (int j = 0; j < rowLenght; j++)
-                {
-                    if (IsPlayable(i, j, whiteTurn))
-                    {
-                        PlayMove(i, j, whiteTurn);
-                        MessageBox.Show(i + " , " + j);
-                        Tuple<int, int> playedMove = new Tuple<int, int>(i, j);
-                        return playedMove;
-                    }
-                }
-            }
-
-            throw new NotImplementedException();
+            //
+            return null;
         }
 
         /// <summary>

@@ -61,6 +61,7 @@
     </ApplicationDefinition>
     <Compile Include="ButtonHandler.cs" />
     <Compile Include="EnumSquareStatus.cs" />
+    <Compile Include="OthelloAI.cs" />
     <Compile Include="ScoreHandler.cs" />
     <Compile Include="TimeHandler.cs" />
     <Page Include="Ressources\DictionaryOthello.xaml">
