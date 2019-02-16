@@ -153,12 +153,32 @@ namespace ArcOthelloAB
 
             /// <summary>
             /// Eval function of a node
+            /// 
+            /// the score equal number of pawn on the board of current player
+            /// minus number of pawn of opponent on the board
             /// </summary>
             /// <returns>score of the node</returns>
             public int Eval()
             {
-                // TODO
-                return 0;
+                int score = 0;
+                foreach (int pawn in game)
+                {
+                    if (isWhiteTurn)
+                    {
+                        if (pawn == 1)
+                            score++;
+                        if (pawn == 2)
+                            score--;
+                    }
+                    else
+                    {
+                        if (pawn == 1)
+                            score--;
+                        if (pawn == 2)
+                            score++;
+                    }
+                }
+                return score;
             }
 
             /// <summary>
@@ -167,8 +187,9 @@ namespace ArcOthelloAB
             /// <returns>final state boolean</returns>
             public bool Final()
             {
-                // TODO
-                return true;
+                if (!GetPossibleOperators().Any()) // if there's no possible move return true
+                    return true;
+                return false;
             }
 
             /// <summary>
@@ -203,7 +224,16 @@ namespace ArcOthelloAB
             /// <returns></returns>
             public MoveNode Apply(Tuple<int, int> move_operator)
             {
-                return null;
+                int[,] newGame = game;
+                // TODO, modify game according according to played move
+
+
+                bool childTurn = !isWhiteTurn; // child turn will be the inverse of current turn
+                MoveNode child = new MoveNode(newGame, childTurn);
+                if (!child.GetPossibleOperators().Any()) // if after playing a move, the child has no available move, then it switches turn
+                    child.isWhiteTurn = this.isWhiteTurn;  // after switching turn, if there's still no move available, the game ended, function Final() will do this verification
+
+                return child;
             }
 
 
