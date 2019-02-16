@@ -32,7 +32,7 @@ namespace ArcOthelloAB
 
         // AI properties
         private bool AIPlayer;
-        //private 
+        private OthelloAI othelloAI;
 
         // Timer properties
         private TimeHandler TimeHandlerContext;
@@ -58,7 +58,7 @@ namespace ArcOthelloAB
         /// Construct an Othello Game
         /// </summary>
         /// <param name="parent">parent Window</param>
-        public OthelloBoard(Window parent, bool aiPlayer = false)
+        public OthelloBoard(Window parent = null, bool aiPlayer = false)
         {
 
             this.parent = parent;
@@ -84,6 +84,7 @@ namespace ArcOthelloAB
             {
                 AIPlayer = aiPlayer;
                 buttonHandler.AITurn = this.PlayAITurn;
+                othelloAI = OthelloAI.GetInstance();
             }
 
             //Start the timer
@@ -382,7 +383,8 @@ namespace ArcOthelloAB
         /// <param name="isWhite">if the AI plays white pawn</param>
         private void PlayAITurn(bool isWhite)
         {
-            GetNextMove(GetBoard(), 0, false); // Ai play its turn
+            Tuple<int, int> bestMove = GetNextMove(GetBoard(), 5, false); // Ai play its turn
+            PlayMove(bestMove.Item1, bestMove.Item2, false);    // AI play its best move
             buttonHandler.changeButtonClickable(true); //AI finished its turn, can now click the button
         }
 
@@ -439,8 +441,7 @@ namespace ArcOthelloAB
         /// <returns></returns>
         public Tuple<int, int> GetNextMove(int[,] game, int level, bool whiteTurn)
         {
-            //
-            return null;
+            return othelloAI.GetNextMove(game, level, whiteTurn);
         }
 
         /// <summary>
