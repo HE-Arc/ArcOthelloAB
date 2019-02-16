@@ -36,7 +36,7 @@ namespace ArcOthelloAB
         public Tuple<int, int> GetNextMove(int[,] game, int level, bool whiteTurn)
         {
             MoveNode root = new MoveNode(game);
-            bool minOrMax = whiteTurn;  // TODO need to see when we must min or max
+            int minOrMax = whiteTurn;  // TODO need to see when we must min or max
             int parentValue = 0; // TODO 0 or 1 for begin search value
             Tuple<int, Tuple<int, int>> bestMove = AlphaBeta(root, level, minOrMax, parentValue);
             return bestMove.Item2;
@@ -47,29 +47,15 @@ namespace ArcOthelloAB
         /// </summary>
         /// <param name="root"></param>
         /// <param name="depth"></param>
-        /// <param name="minOrMax"></param>
+        /// <param name="minOrMax">1 for maximize / -1 for minimize</param>
         /// <param name="parentValue"></param>
         /// <returns></returns>
-        private Tuple<int, Tuple<int, int>> AlphaBeta(MoveNode root, int depth, bool minOrMax, int parentValue)
+        private Tuple<int, Tuple<int, int>> AlphaBeta(MoveNode root, int depth, int minOrMax, int parentValue)
         {
-            if (depth == 0 || root.Final())
-                return new Tuple<int, Tuple<int, int>>(root.Eval(), null);
-            int optVal = 0;
-            if(minOrMax) // if true -> maximaze
-            {
-                optVal = Int32.MinValue;
-            }
-            else    // else minimize
-            {
-                optVal = Int32.MaxValue;
-            }
-            Tuple<int, int> moveOperator = null;
-
-            foreach(var move in root.GetPossibleOperators())
-            {
-                // search th best move
-            }
-
+            if (minOrMax == 1)
+                return Maximize(root, Int32.MaxValue, depth);
+            else if (minOrMax == -1)
+                return Minimize(root, Int32.MinValue, depth);
             return null;
         }
 
@@ -82,8 +68,28 @@ namespace ArcOthelloAB
         /// <returns></returns>
         private Tuple<int, Tuple<int, int>> Maximize(MoveNode root, MoveNode parentMin, int depth)
         {
-            // TODO
-            return null;
+            if(depth == 0 || root.Final())
+            {
+                return new Tuple(root.Eval(), null);
+            }
+
+            int maxValue = Int32.MinValue;
+            Tuple<int, int> maxMove;
+            foreach (var move in root.GetPossibleOperators())
+            {
+                MoveNode child = root.Apply(move);
+                Tuple<int, Tuple<int, int>> minimization = Minimize(child, maxValue, depth - 1);
+                if(minimization.Item1 > maxValue)
+                {
+                    maxValue = minimization.Item1;
+                    maxMove = move;
+                    if(maxValue > parentMin)
+                    {
+                        break;
+                    }
+                }
+            }
+            return new Tuple<int, Tuple<int, int>>(maxValue, maxMove);
         }
 
         /// <summary>
@@ -95,8 +101,28 @@ namespace ArcOthelloAB
         /// <returns></returns>
         private Tuple<int, Tuple<int, int>> Minimize(MoveNode root, MoveNode parentMax, int depth)
         {
-            // TODO
-            return null;
+            if (depth == 0 || root.Final())
+            {
+                return new Tuple(root.Eval(), null);
+            }
+
+            int minValue = Int32.MaxValue;
+            Tuple<int, int> minMove;
+            foreach (var move in root.GetPossibleOperators())
+            {
+                MoveNode child = root.Apply(move);
+                Tuple<int, Tuple<int, int>> maximization = Maximize(child, minValue, depth - 1);
+                if (maximization.Item1 < minValue)
+                {
+                    minValue = maximization.Item1;
+                    minMove = move;
+                    if (minValue < parentMax)
+                    {
+                        break;
+                    }
+                }
+            }
+            return new Tuple<int, Tuple<int, int>>(minValue, minMove);
         }
 
         /// <summary>
