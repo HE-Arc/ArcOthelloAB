@@ -127,7 +127,7 @@ namespace ArcOthelloAB_AI
         public Tuple<int, int> GetNextMove(int[,] game, int level, bool whiteTurn)
         {
             MoveNode root = new MoveNode(game, whiteTurn);
-            int minOrMax = 1;
+            int minOrMax = -1;
             int parentValue = 0; // TODO 0 or 1 for begin search value
             Tuple<int, Tuple<int, int>> bestMove = AlphaBeta(root, level, minOrMax, parentValue);
             return bestMove.Item2;
@@ -297,16 +297,16 @@ namespace ArcOthelloAB_AI
 
 
                 // final score
-                score = (int)(pawnCountEvaluation / 5 + mobilityDifference + cornerCount * 10); // mobility is 5 time more important than pawn count
-                // corner count varying between[-4;4] and being more important, it is multiplied by 10
+                score = (int)(pawnCountEvaluation / 5 + mobilityDifference + cornerCount * 50); // mobility is 5 time more important than pawn count
+                // corner count varying between[-4;4] and being more important, it is multiplied by 50
                 
 
                 if (Final()) // if the node is final, then it means there's a winner, will heavely change Ai choice
                 {
                     if (score > 0)
-                        return 100;
+                        return Int32.MaxValue;
                     if (score < 0)
-                        return -100;
+                        return Int32.MinValue;
                 }
                 return score;
             }
