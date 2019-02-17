@@ -384,7 +384,14 @@ namespace ArcOthelloAB_AI
         /// <returns>A new gameboard with the played move</returns>
         public static int[,] playMove(int[,] game, int x, int y, bool isWhite)
         {
-            int[,] newGame = game;
+            int[,] newGame = new int[game.GetLength(0), game.GetLength(1)];
+            for (int i = 0; i < game.GetLength(0); i++)
+            {
+                for (int j = 0; j < game.GetLength(1); j++)
+                {
+                    newGame[i, j] = game[i, j];
+                }
+            }
 
             int playerValue;
             int opponentValue;
