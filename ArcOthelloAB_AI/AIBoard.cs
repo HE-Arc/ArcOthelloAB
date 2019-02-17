@@ -161,7 +161,7 @@ namespace ArcOthelloAB_AI
         {
             if (depth == 0 || root.Final())
             {
-                return new Tuple<int, Tuple<int, int>>(root.Eval(), new Tuple<int, int>(-1, -1));
+                return new Tuple<int, Tuple<int, int>>(root.Eval(), null);
             }
 
             int maxValue = Int32.MinValue;
@@ -194,7 +194,7 @@ namespace ArcOthelloAB_AI
         {
             if (depth == 0 || root.Final())
             {
-                return new Tuple<int, Tuple<int, int>>(root.Eval(), new Tuple<int, int>(-1, -1));
+                return new Tuple<int, Tuple<int, int>>(root.Eval(), null);
             }
 
             int minValue = Int32.MaxValue;
@@ -251,29 +251,55 @@ namespace ArcOthelloAB_AI
             {
                 int score;
 
+                int playerPawn;
+                int opponentPawn;
+                if(isWhiteTurn)
+                {
+                    playerPawn = 0;
+                    opponentPawn = 1;
+                }
+                else
+                {
+                    playerPawn = 1;
+                    opponentPawn = 0;
+                }
+
+                // pawn count
+                // count the number of pawn owned by the player and substract it by the number of ooponent pawn
                 int pawnCountEvaluation = 0;
 
                 foreach (int pawn in game)
                 {
-                    if (isWhiteTurn)
-                    {
-                        if (pawn == 0)
-                            pawnCountEvaluation++;
-                        if (pawn == 1)
-                            pawnCountEvaluation--;
-                    }
-                    else
-                    {
-                        if (pawn == 0)
-                            pawnCountEvaluation--;
-                        if (pawn == 1)
-                            pawnCountEvaluation++;
-                    }
+                    if (pawn == playerPawn)
+                        pawnCountEvaluation++;
+                    if (pawn == opponentPawn)
+                        pawnCountEvaluation--;
                 }
 
+                // mobility count
+                // substract the player number of possible move by the number of possible move the opponent had previously
                 int mobilityDifference = currentMobility - previousMobility;
 
-                score = (int)(pawnCountEvaluation / 5 + mobilityDifference); // mobility is 5 time more important than pawn count
+                // corner count
+                // check how many corner the player own and substract it by the number of corner owned by opponent
+                int cornerCount = 0;
+
+                int[,] cornerSquare = { { 0, 0 }, { 0, 6 }, { 8, 0 }, { 8, 6 } };
+                for (int i = 0; i < 4; i++)
+                {
+                    int x = cornerSquare[i, 0];
+                    int y = cornerSquare[i, 1];
+                    if (game[x, y] == playerPawn)
+                        cornerCount++;
+                    if (game[x, y] == opponentPawn)
+                        cornerCount--;
+                }
+
+
+                // final score
+                score = (int)(pawnCountEvaluation / 5 + mobilityDifference + cornerCount * 10); // mobility is 5 time more important than pawn count
+                // corner count varying between[-4;4] and being more important, it is multiplied by 10
+                
 
                 if (Final()) // if the node is final, then it means there's a winner, will heavely change Ai choice
                 {
