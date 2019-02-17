@@ -4,6 +4,7 @@
 * Auteurs: Arzul Paul & Biloni Kim Aurore
 * Date: 17.02.2019
 * Organisation: HE-Arc Ingéniere, Neuchâtel
+* GitHub: <https://github.com/HE-Arc/ArcOthelloAB>
 
 ## Fonction d'évaluation
 
