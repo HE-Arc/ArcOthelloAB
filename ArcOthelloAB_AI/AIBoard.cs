@@ -128,7 +128,7 @@ namespace ArcOthelloAB_AI
         {
             MoveNode root = new MoveNode(game, whiteTurn);
             int minOrMax = -1;
-            int parentValue = 0; // TODO 0 or 1 for begin search value
+            int parentValue = 0;
             Tuple<int, Tuple<int, int>> bestMove = AlphaBeta(root, level, minOrMax, parentValue);
             return bestMove.Item2;
         }
@@ -147,7 +147,7 @@ namespace ArcOthelloAB_AI
                 return Maximize(root, Int32.MaxValue, depth);
             else if (minOrMax == -1)
                 return Minimize(root, Int32.MinValue, depth);
-            return null;
+            return new Tuple<int, Tuple<int, int>>(0, new Tuple<int, int>(-1, -1));
         }
 
         /// <summary>
@@ -165,7 +165,7 @@ namespace ArcOthelloAB_AI
             }
 
             int maxValue = Int32.MinValue;
-            Tuple<int, int> maxMove = null;
+            Tuple<int, int> maxMove = new Tuple<int, int>(-1, -1);
             foreach (var move in root.GetPossibleOperators())
             {
                 MoveNode child = root.Apply(move);
@@ -198,7 +198,7 @@ namespace ArcOthelloAB_AI
             }
 
             int minValue = Int32.MaxValue;
-            Tuple<int, int> minMove = null;
+            Tuple<int, int> minMove = new Tuple<int, int>(-1, -1);
             foreach (var move in root.GetPossibleOperators())
             {
                 MoveNode child = root.Apply(move);
@@ -283,7 +283,6 @@ namespace ArcOthelloAB_AI
                 // corner count
                 // check how many corner the player own and substract it by the number of corner owned by opponent
                 int cornerCount = 0;
-
                 int[,] cornerSquare = { { 0, 0 }, { 0, 6 }, { 8, 0 }, { 8, 6 } };
                 for (int i = 0; i < 4; i++)
                 {
@@ -295,10 +294,34 @@ namespace ArcOthelloAB_AI
                         cornerCount--;
                 }
 
+                // Ponderation Matrix
+                // Each case has a ponderation of importance to have a pawn on it
+                int ponderateScore = 0;
+                int[,] ponderationMatrix = {
+                    {20, -3, 11, 8, 8, 8, 11, -3, 20 },
+                    {-3, -7, -4, 1, 1, 1, -4, -7, -3 },
+                    {11, -7, -4, 2, 2, -4, 1, -4, 11 },
+                    {8, 1, 2, -3, -3, 2, 1, 1, 8 },
+                    {11, -4, 2, -3, -3, 2, 1, -4, 11 },
+                    {-3, -7, -4, 2, 2, -4, -4, -7, -3 },
+                    {20, -3, 11, 8, 8, 8, 11, -3, 20 }
+                };
+                int pawnColor = (isWhiteTurn ? 0 : 1);
+                for(int i = 0; i < game.GetLength(0); i++)
+                {
+                    for (int j = 0; j < game.GetLength(1); j++)
+                    {
+                        //if(game[i, j] == pawnColor)
+                        //    ponderateScore += ponderationMatrix[i, j];
+                    }
+                }
+
 
                 // final score
-                score = (int)(pawnCountEvaluation / 5 + mobilityDifference + cornerCount * 50); // mobility is 5 time more important than pawn count
+                score = (int)(pawnCountEvaluation / 5 + mobilityDifference + cornerCount * 50 + ponderateScore);
+                // mobility is 5 time more important than pawn count
                 // corner count varying between[-4;4] and being more important, it is multiplied by 50
+                // ponderateScore
                 
 
                 if (Final()) // if the node is final, then it means there's a winner, will heavely change Ai choice
@@ -317,9 +340,7 @@ namespace ArcOthelloAB_AI
             /// <returns>final state boolean</returns>
             public bool Final()
             {
-                if (!GetPossibleOperators().Any()) // if there's no possible move return true
-                    return true;
-                return false;
+                return !GetPossibleOperators().Any(); // if there's no possible move return true
             }
 
             /// <summary>
