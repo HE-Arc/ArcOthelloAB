@@ -225,7 +225,7 @@ namespace ArcOthelloAB_AI
             public bool isWhiteTurn;
 
             // evaluation tool
-            private int previousMobility;
+            private int previousMobility; // mobility describes the number of possible move a player has
             private int currentMobility;
 
             /// <summary>
@@ -251,6 +251,7 @@ namespace ArcOthelloAB_AI
             {
                 int score;
 
+                // set pawn number for each player according to current player turn
                 int playerPawn;
                 int opponentPawn;
                 if(isWhiteTurn)
@@ -265,7 +266,7 @@ namespace ArcOthelloAB_AI
                 }
 
                 // pawn count
-                // count the number of pawn owned by the player and substract it by the number of ooponent pawn
+                // count the number of pawn owned by the player and substract it by the number of oponent pawn
                 int pawnCountEvaluation = 0;
 
                 foreach (int pawn in game)
@@ -281,7 +282,7 @@ namespace ArcOthelloAB_AI
                 int mobilityDifference = currentMobility - previousMobility;
 
                 // corner count
-                // check how many corner the player own and substract it by the number of corner owned by opponent
+                // check how many corner the player owns and substract it by the number of corner owned by opponent
                 int cornerCount = 0;
                 int[,] cornerSquare = { { 0, 0 }, { 0, 6 }, { 8, 0 }, { 8, 6 } };
                 for (int i = 0; i < 4; i++)
@@ -357,7 +358,7 @@ namespace ArcOthelloAB_AI
                 {
                     for (int j = 0; j < rowLenght; j++)
                     {
-                        if (game[i, j] == -1)
+                        if (game[i, j] == -1) // check only empty square
                         {
                             if (GameLogic.checkPlayableSquare(game,i, j, isWhiteTurn))
                                 possibleOperators.Add(new Tuple<int, int>(i, j));
@@ -393,7 +394,10 @@ namespace ArcOthelloAB_AI
         
     }
 
-
+    /// <summary>
+    /// Classe containing only static function
+    /// used for the othello game logic.
+    /// </summary>
     class GameLogic
     {
 
@@ -407,7 +411,7 @@ namespace ArcOthelloAB_AI
         /// <returns>if the square is playable or not</returns>
         public static bool checkPlayableSquare(int[,] game, int x, int y, bool isWhiteTurn)
         {
-            int[,] directionToCheck = { { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, -1 }, { 0, 1 }, { 1, -1 }, { 1, 0 }, { 1, 1 } };
+            int[,] directionToCheck = { { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, -1 }, { 0, 1 }, { 1, -1 }, { 1, 0 }, { 1, 1 } }; // the eight cardinal direction to check in the board
 
             bool isPlayable = false;
 
@@ -455,13 +459,13 @@ namespace ArcOthelloAB_AI
 
             newGame[x, y] = playerValue;
 
-            int[,] directionToCheck = { { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, -1 }, { 0, 1 }, { 1, -1 }, { 1, 0 }, { 1, 1 } };
+            int[,] directionToCheck = { { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, -1 }, { 0, 1 }, { 1, -1 }, { 1, 0 }, { 1, 1 } };  // the eight cardinal direction to check in the board
 
             for (int i = 0; i < 8; i++)
             {
                 int dirX = directionToCheck[i, 0];
                 int dirY = directionToCheck[i, 1];
-                if (CheckOtherPawnFromDirection(game,dirX, dirY, x, y, isWhite))
+                if (CheckOtherPawnFromDirection(game,dirX, dirY, x, y, isWhite)) // if a direction allowed for a move to be played, then apply modification to said direction
                 {
                     int nextX = x + dirX;
                     int nextY = y + dirY;
