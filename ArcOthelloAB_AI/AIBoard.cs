@@ -161,7 +161,7 @@ namespace ArcOthelloAB_AI
         {
             if (depth == 0 || root.Final())
             {
-                return new Tuple<int, Tuple<int, int>>(root.Eval(), null);
+                return new Tuple<int, Tuple<int, int>>(root.Eval(), new Tuple<int, int>(-1, -1));
             }
 
             int maxValue = Int32.MinValue;
@@ -194,7 +194,7 @@ namespace ArcOthelloAB_AI
         {
             if (depth == 0 || root.Final())
             {
-                return new Tuple<int, Tuple<int, int>>(root.Eval(), null);
+                return new Tuple<int, Tuple<int, int>>(root.Eval(), new Tuple<int, int>(-1, -1));
             }
 
             int minValue = Int32.MaxValue;
