@@ -299,21 +299,24 @@ namespace ArcOthelloAB_AI
                 // Each case has a ponderation of importance to have a pawn on it
                 int ponderateScore = 0;
                 int[,] ponderationMatrix = {
-                    {20, -3, 11, 8, 8, 8, 11, -3, 20 },
-                    {-3, -7, -4, 1, 1, 1, -4, -7, -3 },
-                    {11, -7, -4, 2, 2, -4, 1, -4, 11 },
-                    {8, 1, 2, -3, -3, 2, 1, 1, 8 },
-                    {11, -4, 2, -3, -3, 2, 1, -4, 11 },
-                    {-3, -7, -4, 2, 2, -4, -4, -7, -3 },
-                    {20, -3, 11, 8, 8, 8, 11, -3, 20 }
+                    {20, -3, 11, 8, 11, -3, 20 },
+                    {-3, -7, -4, 1, -4, -7, -3 },
+                    {11, -4, 2, 2, 2, -4, 11 },
+                    {8, 1, 2, -3, -3, 2, 8 },
+                    {8, 1, 2, -3, -3, 2, 8 },
+                    {8, 1, 2, 2, 2, 2, 8 },
+                    {11, -4, 1, 1, 1, -4, 11 },
+                    {-3, -7, -4, 1, -4, -7, -3 },
+                    {20, -3, 11, 8, 11, -3, 20 }
                 };
+
                 int pawnColor = (isWhiteTurn ? 0 : 1);
                 for(int i = 0; i < game.GetLength(0); i++)
                 {
                     for (int j = 0; j < game.GetLength(1); j++)
                     {
-                        //if(game[i, j] == pawnColor)
-                        //    ponderateScore += ponderationMatrix[i, j];
+                        if (game[i, j] == pawnColor)
+                            ponderateScore += ponderationMatrix[i, j];
                     }
                 }
 
