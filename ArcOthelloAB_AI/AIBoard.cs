@@ -295,7 +295,6 @@ namespace ArcOthelloAB_AI
                         cornerCount--;
                 }
 
-
                 // final score
                 score = (int)(pawnCountEvaluation + mobilityDifference * 5 + cornerCount * 200);
                 // mobility is 5 time more important than pawn count
@@ -343,7 +342,6 @@ namespace ArcOthelloAB_AI
                         }
                     }
                 }
-
                 return possibleOperators;
             }
 
@@ -368,8 +366,6 @@ namespace ArcOthelloAB_AI
                 return child;
             }
         }
-
-        
     }
 
     /// <summary>

@@ -1,9 +1,0 @@
-﻿<Application x:Class="ArcOthelloAB.App"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:ArcOthelloAB"
-             StartupUri="Home.xaml">
-    <Application.Resources>
-        <ResourceDictionary Source="/Ressources/DictionaryOthello.xaml" />
-    </Application.Resources>
-</Application>
