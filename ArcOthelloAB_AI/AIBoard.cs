@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ArcOthelloAB
+namespace ArcOthelloAB_AI
 {
     class AIBoard : IPlayable.IPlayable
     {

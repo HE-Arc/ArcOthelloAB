@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28010.2041
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArcOthelloAB", "ArcOthelloAB\ArcOthelloAB.csproj", "{4102665B-1905-49EC-AD83-412F40C92FE7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArcOthelloAB_AI", "ArcOthelloAB_AI\ArcOthelloAB_AI.csproj", "{4641D010-96EF-475A-8E99-2B29C2628D2F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{4102665B-1905-49EC-AD83-412F40C92FE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4102665B-1905-49EC-AD83-412F40C92FE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4102665B-1905-49EC-AD83-412F40C92FE7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4641D010-96EF-475A-8E99-2B29C2628D2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4641D010-96EF-475A-8E99-2B29C2628D2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4641D010-96EF-475A-8E99-2B29C2628D2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4641D010-96EF-475A-8E99-2B29C2628D2F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
